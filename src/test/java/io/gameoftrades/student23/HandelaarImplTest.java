@@ -1,5 +1,6 @@
-package io.gameoftrades.studentNN;
+package io.gameoftrades.student23;
 
+import io.gameoftrades.student23.HandelaarImpl;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
