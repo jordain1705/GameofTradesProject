@@ -80,12 +80,18 @@ public class WereldLaderImpl implements WereldLader {
                 for (String trades : tradesLines){
                     String[] tempTrades = trades.split(",");
                     tradeCityName[i] = tempTrades[0];
-                    tradeType[i] = tempTrades[1];
+                    if(tempTrades[1].equals("VRAAGT") || tempTrades[1].equals("BIEDT")){
+                        
+                        tradeType[i] = tempTrades[1];
+                    } else {
+                        throw new IllegalArgumentException("Invalid HandelsType value");
+                    }
                     tradeGoods[i] = tempTrades[2];
                     tradePrice[i] = Integer.parseInt(tempTrades[3]);
+                    
+                    
                 }
         }
-        
         
         
         List<Stad> steden = new ArrayList();
