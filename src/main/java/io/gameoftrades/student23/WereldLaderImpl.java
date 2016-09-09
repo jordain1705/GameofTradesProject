@@ -111,7 +111,7 @@ public class WereldLaderImpl implements WereldLader {
         
         for (int i = 0; i < h; i++) {
             for (int j = 0; j < w; j++) {
-                terrein[i][j] = new Terrein(kaart, Coordinaat.op(j, i), TerreinType.valueOf(getTerreinType(mapCharacters[j][i])));
+                terrein[j][i] = new Terrein(kaart, Coordinaat.op(j, i), TerreinType.valueOf(getTerreinType(mapCharacters[j][i])));
             }
         }
         
