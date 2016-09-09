@@ -75,6 +75,7 @@ public class WereldLaderImplTest {
         assertEquals(1, w.getKaart().getHoogte());
         assertTrue(w.getSteden().isEmpty());
         assertTrue(w.getMarkt().getHandel().isEmpty());
+        
     }
 
     @Test
@@ -87,7 +88,7 @@ public class WereldLaderImplTest {
         assertTrue(w.getMarkt().getHandel().isEmpty());
     }
 
-    @Test
+   @Test
     public void zouKaartMetExtraSpatiesMoetenladen() {
         Wereld w = lader.laad("/kaarten/testcases/kaart-met-spaties.txt");
         assertEquals(5, w.getKaart().getBreedte());
@@ -126,6 +127,7 @@ public class WereldLaderImplTest {
 
     @Test(expected = IllegalArgumentException.class)
     public void zouHandelMetVerkeerdePrijsNietMoetenLaden() {
+        
         lader.laad("/kaarten/testcases/handel-verkeerde-prijs.txt");
     }
 
