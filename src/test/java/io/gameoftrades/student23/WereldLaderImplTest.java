@@ -96,10 +96,7 @@ public class WereldLaderImplTest {
 
     @Test(expected = IllegalArgumentException.class)
     public void zouEenTeSmalleKaartNietMoetenLaden() {
-        Wereld w  = lader.laad("/kaarten/testcases/te-smalle-kaart.txt");
-        assertEquals(10, w.getKaart().getBreedte());
-        assertEquals(4, w.getKaart().getHoogte());
-        
+        lader.laad("/kaarten/testcases/te-smalle-kaart.txt");
     }
 
     @Test(expected = IllegalArgumentException.class)

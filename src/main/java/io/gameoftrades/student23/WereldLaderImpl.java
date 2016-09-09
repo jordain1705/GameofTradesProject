@@ -41,7 +41,12 @@ public class WereldLaderImpl implements WereldLader {
         for (int i = 0; i < h; i++) {
                 //System.out.println(in.next());
                 terreinLines.add(in.next());
+                if(terreinLines.get(i).matches(".*\\d.*")){
+                    throw new IllegalArgumentException("Invalid Terrein value");
+                }
         }
+        
+        
         
         int numberCity = Integer.parseInt(in.next());
         
@@ -105,7 +110,11 @@ public class WereldLaderImpl implements WereldLader {
         for (int i = 0; i < h; i++) {
             for (int j = 0; j < w; j++) {
                 String[] temp = terreinLines.get(i).split("");
-                mapCharacters[j][i] = temp[j];
+                if(temp.length < w ){
+                    throw new IllegalArgumentException("Invalid width value");
+                } else {
+                    mapCharacters[j][i] = temp[j];
+                }
             }
         }
         
