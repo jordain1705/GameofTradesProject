@@ -12,12 +12,12 @@ import java.util.Scanner;
 public class StudentUI {
         
 	public static void main(String[] args) {
-            MainGui.toon(new HandelaarImpl(), "/kaarten/voorbeeld-kaart.txt");
+            MainGui.toon(new HandelaarImpl(), "/kaarten/westeros-kaart.txt");
             
             //WereldLaderImpl test = new WereldLaderImpl();
             
             
-            //test.MapTesting("/kaarten/voorbeeld-kaart.txt");
+            //test.MapTesting("/kaarten/westeros-kaart.txt");
             
             
 	}
