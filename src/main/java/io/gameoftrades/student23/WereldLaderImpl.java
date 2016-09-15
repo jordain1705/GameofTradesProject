@@ -18,8 +18,11 @@ import java.util.Scanner;
 
 public class WereldLaderImpl implements WereldLader {
 
+    private Wereld world;
+    private Terrein[][] terrein; 
+
     @Override
-    public Wereld laad(String resource){
+    public Wereld laad(String resource) {
         //
         // Gebruik this.getClass().getResourceAsStream(resource) om een resource van het classpath te lezen.
         //
@@ -27,126 +30,119 @@ public class WereldLaderImpl implements WereldLader {
         //
         // TODO Laad de wereld!
         //
-        
+
         Scanner in = new Scanner(this.getClass().getResourceAsStream(resource));
-              
+
         String[] Line = in.nextLine().split(",");
-        
+
         int w = Integer.parseInt(Line[0].trim());
         int h = Integer.parseInt(Line[1].trim());
         LinkedList<String> terreinLines = new LinkedList();
-        
+
         for (int i = 0; i < h; i++) {
-                terreinLines.add(in.nextLine().trim());
-                if(terreinLines.get(i).matches(".*\\d.*")){
-                    throw new IllegalArgumentException("Invalid Terrein value");
-                }
+            terreinLines.add(in.nextLine().trim());
+            if (terreinLines.get(i).matches(".*\\d.*")) {
+                throw new IllegalArgumentException("Invalid Terrein value");
+            }
         }
-        
-        
-        
+
         int numberCity = Integer.parseInt(in.nextLine().trim());
-        
+
         LinkedList<String> cityLines = new LinkedList();
         String[] cityName = new String[numberCity];
         int[] cityX = new int[numberCity];
         int[] cityY = new int[numberCity];
-        
+
         for (int i = 0; i < numberCity; i++) {
-                String cityLine = in.nextLine().trim();
-                cityLines.add(cityLine);
-                
-                for (String city : cityLines){
-                    String[] tempCity = city.split(",");
-                    cityX[i] = Integer.parseInt(tempCity[0]);
-                    cityY[i] = Integer.parseInt(tempCity[1]);
-                    cityName[i] = tempCity[2];
-                }
+            String cityLine = in.nextLine().trim();
+            cityLines.add(cityLine);
+
+            for (String city : cityLines) {
+                String[] tempCity = city.split(",");
+                cityX[i] = Integer.parseInt(tempCity[0]);
+                cityY[i] = Integer.parseInt(tempCity[1]);
+                cityName[i] = tempCity[2];
+            }
         }
-        
+
         int numberTrades = Integer.parseInt(in.nextLine().trim());
-        
+
         LinkedList<String> tradesLines = new LinkedList();
-        String[] tradeCityName = new String[numberTrades]; 
-        String[] tradeType = new String[numberTrades]; 
-        String[] tradeGoods = new String[numberTrades]; 
+        String[] tradeCityName = new String[numberTrades];
+        String[] tradeType = new String[numberTrades];
+        String[] tradeGoods = new String[numberTrades];
         int[] tradePrice = new int[numberTrades];
-        
+
         for (int i = 0; i < numberTrades; i++) {
-                tradesLines.add(in.nextLine().trim());
-                
-                for (String trades : tradesLines){
-                    String[] tempTrades = trades.split(",");
-                    tradeCityName[i] = tempTrades[0];
-                    if(tempTrades[1].equals("VRAAGT") || tempTrades[1].equals("BIEDT")){
-                        
-                        tradeType[i] = tempTrades[1];
-                    } else {
-                        throw new IllegalArgumentException("Invalid HandelsType value");
-                    }
-                    tradeGoods[i] = tempTrades[2];
-                    tradePrice[i] = Integer.parseInt(tempTrades[3]);
-                    
-                    
+            tradesLines.add(in.nextLine().trim());
+
+            for (String trades : tradesLines) {
+                String[] tempTrades = trades.split(",");
+                tradeCityName[i] = tempTrades[0];
+                if (tempTrades[1].equals("VRAAGT") || tempTrades[1].equals("BIEDT")) {
+
+                    tradeType[i] = tempTrades[1];
+                } else {
+                    throw new IllegalArgumentException("Invalid HandelsType value");
                 }
+                tradeGoods[i] = tempTrades[2];
+                tradePrice[i] = Integer.parseInt(tempTrades[3]);
+
+            }
         }
-        
-        
+
         List<Stad> steden = new ArrayList();
         List<Handel> handels = new ArrayList();
-        
+
         //Coordinaat coordinaat = null;
-        
         for (int i = 0; i < numberCity; i++) {
-            if(cityX[i] == 0 && cityY[i] == 0 )
+            if (cityX[i] == 0 && cityY[i] == 0) {
                 throw new IllegalArgumentException("Invalid coordinate for city " + cityName[i]);
-            else
-            steden.add(new Stad(Coordinaat.op(cityX[i], cityY[i]),cityName[i]));
+            } else {
+                steden.add(new Stad(Coordinaat.op(cityX[i], cityY[i]), cityName[i]));
+            }
         }
-        
+
         for (int i = 0; i < numberTrades; i++) {
-            handels.add(new Handel(GetCity(tradeCityName[i],steden), HandelType.valueOf(tradeType[i]), new Handelswaar(tradeGoods[i]), tradePrice[i]));
+            handels.add(new Handel(GetCity(tradeCityName[i], steden), HandelType.valueOf(tradeType[i]), new Handelswaar(tradeGoods[i]), tradePrice[i]));
         }
-        
-        Kaart kaart = new Kaart(w,h);
+
+        Kaart kaart = new Kaart(w, h);
         Markt markt = new Markt(handels);
-        Terrein[][] terrein = new Terrein[w][h];
-        
+        terrein = new Terrein[w][h];
+
         String[][] mapCharacters = new String[w][h];
-        
+
         for (int i = 0; i < h; i++) {
             for (int j = 0; j < w; j++) {
                 String[] temp = terreinLines.get(i).split("");
-                if(temp.length < w ){
+                if (temp.length < w) {
                     throw new IllegalArgumentException("Invalid width value");
                 } else {
                     mapCharacters[j][i] = temp[j];
                 }
             }
         }
-        
+
         for (int i = 0; i < h; i++) {
             for (int j = 0; j < w; j++) {
                 terrein[j][i] = new Terrein(kaart, Coordinaat.op(j, i), TerreinType.valueOf(getTerreinType(mapCharacters[j][i])));
             }
         }
-        
-        Wereld world = new Wereld(kaart, steden, markt);
-        
-        
+
+        world = new Wereld(kaart, steden, markt);
+
         return world;
     }
-    
-    public void MapTesting(String resource){
+
+    public void MapTesting(String resource) {
         Scanner in = new Scanner(this.getClass().getResourceAsStream(resource));
-        
-        
-        
-        while(in.hasNext()){
+
+        while (in.hasNext()) {
             String temp = in.nextLine();
             System.out.println(temp);
         }
-        
+
         /*
         String[] Line = in.nextLine().split(",");
         
@@ -216,23 +212,22 @@ public class WereldLaderImpl implements WereldLader {
         Markt markt = new Markt(handels);
         
         Wereld world = new Wereld(kaart, steden, markt);*/
-        
     }
-    
-    private Stad GetCity(String cityName,List<Stad> steden){
+
+    private Stad GetCity(String cityName, List<Stad> steden) {
         for (int j = 0; j < steden.size(); j++) {
-                if(steden.get(j).getNaam().equals(cityName)){
-                   return steden.get(j);
-                } 
+            if (steden.get(j).getNaam().equals(cityName)) {
+                return steden.get(j);
+            }
         }
-        
+
         return null;
     }
 
-    private String getTerreinType(String mapChar){
+    private String getTerreinType(String mapChar) {
         String terreinType = "";
-        
-        switch(mapChar){
+
+        switch (mapChar) {
             case "Z":
                 terreinType = "ZEE";
                 break;
@@ -249,7 +244,11 @@ public class WereldLaderImpl implements WereldLader {
                 terreinType = "STAD";
                 break;
         }
-        
+
         return terreinType;
     }
+    public Terrein[][] getTerrein(){
+        return terrein; 
+    }
+
 }
