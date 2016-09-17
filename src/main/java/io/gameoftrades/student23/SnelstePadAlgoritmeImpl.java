@@ -9,6 +9,8 @@ import io.gameoftrades.model.algoritme.SnelstePadAlgoritme;
 import io.gameoftrades.model.kaart.Coordinaat;
 import io.gameoftrades.model.kaart.Kaart;
 import io.gameoftrades.model.kaart.Pad;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -18,7 +20,15 @@ public class SnelstePadAlgoritmeImpl implements SnelstePadAlgoritme{
 
     @Override
     public Pad bereken(Kaart kaart, Coordinaat start, Coordinaat eind) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        Pad testPad = new PadImpl();
+        
+        List<Coordinaat> nodes = new ArrayList(); 
+        nodes.add(start);
+        
+        testPad.getBewegingen();
+        
+        return testPad;
+        
     }
     
 }
