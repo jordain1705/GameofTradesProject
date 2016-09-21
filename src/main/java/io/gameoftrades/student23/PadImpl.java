@@ -15,6 +15,8 @@ import io.gameoftrades.model.kaart.Richting;
  */
 public class PadImpl implements Pad{
 
+    
+    
     @Override
     public int getTotaleTijd() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.

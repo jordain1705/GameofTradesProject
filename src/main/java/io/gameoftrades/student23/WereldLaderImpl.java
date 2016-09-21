@@ -43,8 +43,6 @@ public class WereldLaderImpl implements WereldLader {
                 }
         }
         
-        
-        
         int numberCity = Integer.parseInt(in.nextLine().trim());
         
         LinkedList<String> cityLines = new LinkedList();
@@ -91,7 +89,6 @@ public class WereldLaderImpl implements WereldLader {
                 }
         }
         
-        
         List<Stad> steden = new ArrayList();
         List<Handel> handels = new ArrayList();
         
@@ -101,7 +98,7 @@ public class WereldLaderImpl implements WereldLader {
             if(cityX[i] == 0 && cityY[i] == 0 )
                 throw new IllegalArgumentException("Invalid coordinate for city " + cityName[i]);
             else
-            steden.add(new Stad(Coordinaat.op(cityX[i], cityY[i]),cityName[i]));
+            steden.add(new Stad(Coordinaat.op(cityX[i] - 1, cityY[i] - 1),cityName[i]));
         }
         
         for (int i = 0; i < numberTrades; i++) {
@@ -130,6 +127,8 @@ public class WereldLaderImpl implements WereldLader {
                 terrein[j][i] = new Terrein(kaart, Coordinaat.op(j, i), TerreinType.valueOf(getTerreinType(mapCharacters[j][i])));
             }
         }
+        
+       
         
         Wereld world = new Wereld(kaart, steden, markt);
         

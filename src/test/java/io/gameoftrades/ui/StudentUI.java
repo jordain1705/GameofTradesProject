@@ -1,8 +1,6 @@
 package io.gameoftrades.ui;
 
 import io.gameoftrades.student23.HandelaarImpl;
-import io.gameoftrades.student23.WereldLaderImpl;
-import java.util.Scanner;
 
 /**
  * Toont de visuele gebruikersinterface.
@@ -12,7 +10,7 @@ import java.util.Scanner;
 public class StudentUI {
         
 	public static void main(String[] args) {
-            MainGui.toon(new HandelaarImpl(), "/kaarten/westeros-kaart.txt");
+            MainGui.toon(new HandelaarImpl(), "/kaarten/voorbeeld-kaart.txt");
             
             //WereldLaderImpl test = new WereldLaderImpl();
             
