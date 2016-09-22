@@ -26,87 +26,103 @@ public class SnelstePadAlgoritmeImpl implements SnelstePadAlgoritme,Debuggable {
     public Pad bereken(Kaart kaart, Coordinaat start, Coordinaat eind) {
         Pad testPad = new PadImpl();
         
-        List<Coordinaat> openList = new ArrayList(); 
-        List<Coordinaat> closedList = new ArrayList();
+        List<Tile> openList = new ArrayList(); 
+        List<Tile> closedList = new ArrayList();
         
         Tile startTile = new Tile(kaart, start);
-        Tile endTile = new Tile(kaart, eind);
         startTile.setGvalue(0);
-        closedList.add(startTile.getCoordinaat());
-        boolean endIsnotFound = false;
-        Tile selectedTile = startTile;
+        openList.add(startTile);
         
-        //closedList.add(endTile);
-        for (int x = 0; x < 10; x++) {
-            List<Tile> selectedTileNB = selectedTile.getAllNeighbours();
-
-        for (Coordinaat tile1 : closedList) {
-            if(tile1.equals(eind)){
-                endIsnotFound = true;
+        Boolean isNotDone = false;
+        
+        while(!isNotDone){
+            System.out.println("Step:");
+            Tile selectedTile = calcuLowestFTile(openList, eind);
+            openList.remove(selectedTile);
+            closedList.add(selectedTile);
+            
+            if(selectedTile.getCoordinaat().equals(eind)){
+                isNotDone = true;
+                System.out.println("Found end");
+                shortestPath(closedList);
             } else {
-                //System.out.println("end not found");
+                List<Coordinaat> closeListCoordinaat = new ArrayList();
+                List<Coordinaat> openListCoordinaat = new ArrayList();
+
+                for (int i = 0; i < closedList.size(); i++) {
+                    closeListCoordinaat.add(closedList.get(i).getCoordinaat());
+                }
+
+                for (int i = 0; i < openList.size(); i++) {
+                    openListCoordinaat.add(openList.get(i).getCoordinaat());
+                }
+
+                List<Tile> selectedTileNB = selectedTile.getAllNeighbours();
+
+                for (Tile optionTile : selectedTileNB){
+                    //System.out.println("optionTile" + optionTile.getCoordinaat());
+                }
+
+                for (Tile optionTile : selectedTileNB) {
+                    if(!closeListCoordinaat.contains(optionTile.getCoordinaat())){
+                        if(!openListCoordinaat.contains(optionTile.getCoordinaat())){
+                            openList.add(optionTile);
+                            optionTile.setParent(selectedTile);
+                        } else {
+                            double ExistingGvalue = selectedTile.getGValue() + optionTile.getGValue();
+                            if(ExistingGvalue < optionTile.getGValue()){
+                                optionTile.setParent(selectedTile);
+                            }
+                        }
+                    }
+                }
+                System.out.println("OpenList");
+                for (Tile optionTile : openList){
+                    System.out.print(optionTile.getCoordinaat());
+                    System.out.println("");
+                }
+                
+                System.out.println("ClosedList");
+                for (Tile optionTile : closedList){
+                    System.out.print(optionTile.getCoordinaat());
+                    System.out.println("");
+                }
             }
+            
         }
-
-        for (int i = 0; i < selectedTileNB.size(); i++) {
-                System.out.print("Before" + selectedTileNB.get(i).getCoordinaat());
-            }
-            System.out.println("");
-        
-        
-        for (int i = 0; i < selectedTileNB.size(); i++) {
-            if(!openList.contains(selectedTileNB.get(i).getCoordinaat()) && !closedList.contains(selectedTileNB.get(i).getCoordinaat())){
-                openList.add(selectedTileNB.get(i).getCoordinaat());
-                System.out.println("Niet in open en close");
-                selectedTileNB.get(i).setParent(selectedTile);
-            } else if (closedList.contains(selectedTileNB.get(i).getCoordinaat())){
-                System.out.println("Zit in closedList");
-                System.out.println("Remove:" + selectedTileNB.get(i).getCoordinaat());
-                selectedTileNB.remove(i);   
-            }
-        }
-        
-            for (int i = 0; i < selectedTileNB.size(); i++) {
-                System.out.print("After" + selectedTileNB.get(i).getCoordinaat());
-            }
-            System.out.println("");
-        double F = 0;     
-        for (Tile optionTile : selectedTileNB) {
-            F = selectedTile.getHValue(eind) + optionTile.getGValue();
-            optionTile.setFValue(F);
-        }
-
-        Tile lowestFTile = selectedTileNB.get(0);
-        for (Tile optionTile : selectedTileNB) {
-            if(optionTile.getFValue() < lowestFTile.getFValue()){
-                lowestFTile = optionTile;
-            }
-        }
-
-        closedList.add(lowestFTile.getCoordinaat());
-        openList.remove(lowestFTile.getCoordinaat());
-        selectedTile = lowestFTile;
-        //}
-            System.out.println("ClosedList:");
-
-        for (int i = 0; i < closedList.size(); i++) {
-
-            System.out.println(closedList.get(i));
-        }
-            System.out.println("Openlist:");
-        for (int i = 0; i < openList.size(); i++) {
-
-            System.out.println(openList.get(i));
-        }
-        
-            System.out.println("step" + x);
-        }
-        
-        
         return testPad;
     }
 
-    private void startCalculate(Tile currentTile){
+    private Tile calcuLowestFTile(List<Tile> openList, Coordinaat eind){
+        
+        if(!openList.isEmpty()){
+            Tile lowestFTile = openList.get(0);
+            for (Tile tile1 : openList) {
+                tile1.setFValue(tile1.getHValue(eind) + tile1.getGValue());
+                if(tile1.getFValue() < lowestFTile.getFValue()){
+                    lowestFTile = tile1;
+                }
+            }
+            
+            return lowestFTile;
+        } else {
+            return null;
+        }
+    }
+    
+    private void shortestPath(List<Tile> closedList){
+        System.out.println("ClosedList");
+        for (Tile optionTile : closedList){
+            System.out.print(optionTile.getCoordinaat());
+            System.out.println("");
+        }
+        
+        
+        System.out.println("TestParent");
+        for (int i = 1; i < closedList.size(); i++) {
+            System.out.println(closedList.get(closedList.size() - i).getParent().getCoordinaat());
+        }
+        
         
     }
     

@@ -8,6 +8,8 @@ package io.gameoftrades.student23;
 import io.gameoftrades.model.kaart.Coordinaat;
 import io.gameoftrades.model.kaart.Pad;
 import io.gameoftrades.model.kaart.Richting;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -15,7 +17,7 @@ import io.gameoftrades.model.kaart.Richting;
  */
 public class PadImpl implements Pad{
 
-    
+    List<Coordinaat> padCoordinaten = new ArrayList();
     
     @Override
     public int getTotaleTijd() {
