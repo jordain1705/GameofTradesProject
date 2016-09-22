@@ -26,50 +26,80 @@ public class SnelstePadAlgoritmeImpl implements SnelstePadAlgoritme,Debuggable {
     public Pad bereken(Kaart kaart, Coordinaat start, Coordinaat eind) {
         Pad testPad = new PadImpl();
         
-        List<Tile> openList = new ArrayList(); 
-        List<Tile> closedList = new ArrayList();
+        List<Coordinaat> openList = new ArrayList(); 
+        List<Coordinaat> closedList = new ArrayList();
         
         Tile startTile = new Tile(kaart, start);
         Tile endTile = new Tile(kaart, eind);
         startTile.setGvalue(0);
-        closedList.add(startTile);
+        closedList.add(startTile.getCoordinaat());
         boolean endIsnotFound = false;
-        Tile selectedTile = closedList.get(0);
+        Tile selectedTile = startTile;
         
         //closedList.add(endTile);
-        
-        while(!endIsnotFound){
+        for (int x = 0; x < 10; x++) {
             List<Tile> selectedTileNB = selectedTile.getAllNeighbours();
-            
-            for (Tile tile1 : closedList) {
-                if(tile1.getCoordinaat().equals(eind)){
-                    endIsnotFound = true;
-                } else {
-                    System.out.println("end not found");
-                }
+
+        for (Coordinaat tile1 : closedList) {
+            if(tile1.equals(eind)){
+                endIsnotFound = true;
+            } else {
+                //System.out.println("end not found");
             }
-            
+        }
+
+        for (int i = 0; i < selectedTileNB.size(); i++) {
+                System.out.print("Before" + selectedTileNB.get(i).getCoordinaat());
+            }
+            System.out.println("");
+        
+        
+        for (int i = 0; i < selectedTileNB.size(); i++) {
+            if(!openList.contains(selectedTileNB.get(i).getCoordinaat()) && !closedList.contains(selectedTileNB.get(i).getCoordinaat())){
+                openList.add(selectedTileNB.get(i).getCoordinaat());
+                System.out.println("Niet in open en close");
+                selectedTileNB.get(i).setParent(selectedTile);
+            } else if (closedList.contains(selectedTileNB.get(i).getCoordinaat())){
+                System.out.println("Zit in closedList");
+                System.out.println("Remove:" + selectedTileNB.get(i).getCoordinaat());
+                selectedTileNB.remove(i);   
+            }
+        }
+        
             for (int i = 0; i < selectedTileNB.size(); i++) {
-                if(!openList.contains(selectedTileNB.get(i)) && !closedList.contains(selectedTileNB.get(i))){
-                    openList.addAll(selectedTileNB);
-                    selectedTileNB.get(i).setParent(selectedTile);
-                }
+                System.out.print("After" + selectedTileNB.get(i).getCoordinaat());
             }
-            double F = 0;     
-            for (Tile optionTile : selectedTileNB) {
-                F = selectedTile.getHValue(eind) + optionTile.getGValue();
-                optionTile.setFValue(F);
-            }
+            System.out.println("");
+        double F = 0;     
+        for (Tile optionTile : selectedTileNB) {
+            F = selectedTile.getHValue(eind) + optionTile.getGValue();
+            optionTile.setFValue(F);
+        }
 
-            Tile lowestFTile = selectedTileNB.get(0);
-            for (Tile optionTile : selectedTileNB) {
-                if(optionTile.getFValue() < lowestFTile.getFValue()){
-                    lowestFTile = optionTile;
-                }
+        Tile lowestFTile = selectedTileNB.get(0);
+        for (Tile optionTile : selectedTileNB) {
+            if(optionTile.getFValue() < lowestFTile.getFValue()){
+                lowestFTile = optionTile;
             }
+        }
 
-            closedList.add(lowestFTile);
-            selectedTile = lowestFTile;
+        closedList.add(lowestFTile.getCoordinaat());
+        openList.remove(lowestFTile.getCoordinaat());
+        selectedTile = lowestFTile;
+        //}
+            System.out.println("ClosedList:");
+
+        for (int i = 0; i < closedList.size(); i++) {
+
+            System.out.println(closedList.get(i));
+        }
+            System.out.println("Openlist:");
+        for (int i = 0; i < openList.size(); i++) {
+
+            System.out.println(openList.get(i));
+        }
+        
+            System.out.println("step" + x);
         }
         
         
