@@ -1,4 +1,4 @@
-package io.gameoftrades.ui;
+  package io.gameoftrades.ui;
 
 import io.gameoftrades.student23.HandelaarImpl;
 

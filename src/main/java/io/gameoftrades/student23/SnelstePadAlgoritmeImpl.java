@@ -21,6 +21,7 @@ import io.gameoftrades.debug.Debuggable;
  */
 public class SnelstePadAlgoritmeImpl implements SnelstePadAlgoritme,Debuggable {
     private Debugger debug = new AsciiArtDebugger();
+    public double G = 0;
     
     @Override
     public Pad bereken(Kaart kaart, Coordinaat start, Coordinaat eind) {
@@ -35,6 +36,8 @@ public class SnelstePadAlgoritmeImpl implements SnelstePadAlgoritme,Debuggable {
         
         Boolean isNotDone = false;
         
+        
+        
         while(!isNotDone){
             System.out.println("Step:");
             Tile selectedTile = calcuLowestFTile(openList, eind);
@@ -44,7 +47,7 @@ public class SnelstePadAlgoritmeImpl implements SnelstePadAlgoritme,Debuggable {
             if(selectedTile.getCoordinaat().equals(eind)){
                 isNotDone = true;
                 System.out.println("Found end");
-                shortestPath(closedList);
+                shortestPath(start, closedList);
             } else {
                 List<Coordinaat> closeListCoordinaat = new ArrayList();
                 List<Coordinaat> openListCoordinaat = new ArrayList();
@@ -59,10 +62,6 @@ public class SnelstePadAlgoritmeImpl implements SnelstePadAlgoritme,Debuggable {
 
                 List<Tile> selectedTileNB = selectedTile.getAllNeighbours();
 
-                for (Tile optionTile : selectedTileNB){
-                    //System.out.println("optionTile" + optionTile.getCoordinaat());
-                }
-
                 for (Tile optionTile : selectedTileNB) {
                     if(!closeListCoordinaat.contains(optionTile.getCoordinaat())){
                         if(!openListCoordinaat.contains(optionTile.getCoordinaat())){
@@ -72,6 +71,9 @@ public class SnelstePadAlgoritmeImpl implements SnelstePadAlgoritme,Debuggable {
                             double ExistingGvalue = selectedTile.getGValue() + optionTile.getGValue();
                             if(ExistingGvalue < optionTile.getGValue()){
                                 optionTile.setParent(selectedTile);
+                                optionTile.setGvalue(ExistingGvalue);
+                                G += optionTile.getGValue();
+                                optionTile.setFValue(optionTile.getHValue(eind) + optionTile.getGValue());
                             }
                         }
                     }
@@ -98,32 +100,49 @@ public class SnelstePadAlgoritmeImpl implements SnelstePadAlgoritme,Debuggable {
         if(!openList.isEmpty()){
             Tile lowestFTile = openList.get(0);
             for (Tile tile1 : openList) {
-                tile1.setFValue(tile1.getHValue(eind) + tile1.getGValue());
+                G += tile1.getGValue();
+                tile1.setFValue(tile1.getHValue(eind) + G + tile1.getGValue());
                 if(tile1.getFValue() < lowestFTile.getFValue()){
                     lowestFTile = tile1;
                 }
             }
             
+            lowestFTile.setGvalue(G);
             return lowestFTile;
         } else {
             return null;
         }
     }
     
-    private void shortestPath(List<Tile> closedList){
+    private void shortestPath(Coordinaat start, List<Tile> closedList){
+        
+        List<Coordinaat> correctPath = new ArrayList();
         System.out.println("ClosedList");
-        for (Tile optionTile : closedList){
-            System.out.print(optionTile.getCoordinaat());
-            System.out.println("");
+        
+        Tile selectTile = closedList.get(closedList.size() - 1);
+        Boolean startFound = false;
+        
+        
+        while(!startFound){
+            if(selectTile.getParent() != null){
+                if(!selectTile.getParent().getCoordinaat().equals(start)){
+                    System.out.println(selectTile.getParent().getCoordinaat());
+                    selectTile = selectTile.getParent();
+                } else {
+                    startFound = true;
+                }
+                
+            }
         }
         
-        
-        System.out.println("TestParent");
-        for (int i = 1; i < closedList.size(); i++) {
-            System.out.println(closedList.get(closedList.size() - i).getParent().getCoordinaat());
-        }
-        
-        
+        Boolean startNotFound = false;
+        Tile checkTile = closedList.get(0);
+        /*
+        while(!startNotFound){
+            if(!checkTile.getParent().getCoordinaat().equals(start)){
+                
+            }
+        }*/
     }
     
     @Override

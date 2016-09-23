@@ -17,7 +17,15 @@ import java.util.List;
  */
 public class PadImpl implements Pad{
 
-    List<Coordinaat> padCoordinaten = new ArrayList();
+    private List<Coordinaat> padCoordinaten = new ArrayList();
+    
+    public List<Coordinaat> getPadCoordinaten() {
+        return padCoordinaten;
+    }
+
+    public void setPadCoordinaten(List<Coordinaat> padCoordinaten) {
+        this.padCoordinaten = padCoordinaten;
+    }
     
     @Override
     public int getTotaleTijd() {
@@ -38,5 +46,4 @@ public class PadImpl implements Pad{
     public Coordinaat volg(Coordinaat start) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
-    
 }
