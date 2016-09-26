@@ -21,26 +21,29 @@ import io.gameoftrades.debug.Debuggable;
  */
 public class SnelstePadAlgoritmeImpl implements SnelstePadAlgoritme,Debuggable {
     private Debugger debug = new AsciiArtDebugger();
-    public double G = 0;
+    PadImpl Pad;
     
     @Override
     public Pad bereken(Kaart kaart, Coordinaat start, Coordinaat eind) {
-        Pad testPad = new PadImpl();
+        Pad = new PadImpl(kaart, start, eind);
+        
+        double PathGValue = 0;
         
         List<Tile> openList = new ArrayList(); 
         List<Tile> closedList = new ArrayList();
         
         Tile startTile = new Tile(kaart, start);
-        startTile.setGvalue(0);
+        //startTile.setGvalue(PathGValue);
         openList.add(startTile);
         
         Boolean isNotDone = false;
         
-        
-        
         while(!isNotDone){
-            System.out.println("Step:");
-            Tile selectedTile = calcuLowestFTile(openList, eind);
+        //for (int x = 0; x < 10; x++) {
+            //System.out.println("Step: " + x);
+            Tile selectedTile = calcuLowestFTile(openList, eind, PathGValue);
+            //PathGValue += selectedTile.getGValue();
+            //System.out.println("G:" + PathGValue);
             openList.remove(selectedTile);
             closedList.add(selectedTile);
             
@@ -67,47 +70,48 @@ public class SnelstePadAlgoritmeImpl implements SnelstePadAlgoritme,Debuggable {
                         if(!openListCoordinaat.contains(optionTile.getCoordinaat())){
                             openList.add(optionTile);
                             optionTile.setParent(selectedTile);
+                            optionTile.setGvalue(PathGValue + optionTile.getGValue());
                         } else {
-                            double ExistingGvalue = selectedTile.getGValue() + optionTile.getGValue();
-                            if(ExistingGvalue < optionTile.getGValue()){
+                            double ExistingGvalue = selectedTile.getHValue(eind) + selectedTile.getGValue();
+                            if(optionTile.getGValue() > ExistingGvalue){
                                 optionTile.setParent(selectedTile);
                                 optionTile.setGvalue(ExistingGvalue);
-                                G += optionTile.getGValue();
-                                optionTile.setFValue(optionTile.getHValue(eind) + optionTile.getGValue());
+                                //optionTile.setFValue(optionTile.getHValue(eind) + PathGValue + optionTile.getGValue());
                             }
                         }
                     }
                 }
+                /*
                 System.out.println("OpenList");
                 for (Tile optionTile : openList){
                     System.out.print(optionTile.getCoordinaat());
                     System.out.println("");
-                }
+                }*/
                 
-                System.out.println("ClosedList");
+                /*System.out.println("ClosedList");
                 for (Tile optionTile : closedList){
                     System.out.print(optionTile.getCoordinaat());
                     System.out.println("");
-                }
+                }*/
             }
-            
         }
-        return testPad;
+        
+        debug.debugPad(kaart, start, Pad);
+ 
+        return Pad;
     }
 
-    private Tile calcuLowestFTile(List<Tile> openList, Coordinaat eind){
+    private Tile calcuLowestFTile(List<Tile> openList, Coordinaat eind, double PathGValue){
         
         if(!openList.isEmpty()){
             Tile lowestFTile = openList.get(0);
             for (Tile tile1 : openList) {
-                G += tile1.getGValue();
-                tile1.setFValue(tile1.getHValue(eind) + G + tile1.getGValue());
+                //tile1.setFValue(tile1.getHValue(eind) + PathGValue + tile1.getGValue());
                 if(tile1.getFValue() < lowestFTile.getFValue()){
                     lowestFTile = tile1;
                 }
+                
             }
-            
-            lowestFTile.setGvalue(G);
             return lowestFTile;
         } else {
             return null;
@@ -117,16 +121,15 @@ public class SnelstePadAlgoritmeImpl implements SnelstePadAlgoritme,Debuggable {
     private void shortestPath(Coordinaat start, List<Tile> closedList){
         
         List<Coordinaat> correctPath = new ArrayList();
-        System.out.println("ClosedList");
+        //System.out.println("ParentList");
         
         Tile selectTile = closedList.get(closedList.size() - 1);
         Boolean startFound = false;
-        
-        
+
         while(!startFound){
             if(selectTile.getParent() != null){
                 if(!selectTile.getParent().getCoordinaat().equals(start)){
-                    System.out.println(selectTile.getParent().getCoordinaat());
+                    correctPath.add(selectTile.getParent().getCoordinaat());
                     selectTile = selectTile.getParent();
                 } else {
                     startFound = true;
@@ -134,15 +137,8 @@ public class SnelstePadAlgoritmeImpl implements SnelstePadAlgoritme,Debuggable {
                 
             }
         }
+        Pad.setPadCoordinaten(correctPath);
         
-        Boolean startNotFound = false;
-        Tile checkTile = closedList.get(0);
-        /*
-        while(!startNotFound){
-            if(!checkTile.getParent().getCoordinaat().equals(start)){
-                
-            }
-        }*/
     }
     
     @Override
