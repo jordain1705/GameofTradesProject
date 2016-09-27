@@ -44,17 +44,11 @@ public class WereldLaderImpl implements WereldLader {
                 throw new IllegalArgumentException("Invalid Terrein value");
             }
         }
-<<<<<<< Updated upstream
-        
+
         int numberCity = Integer.parseInt(in.nextLine().trim());
-        
-=======
 
         //volgende stap
         //vullt citys
-        int numberCity = Integer.parseInt(in.nextLine().trim());// Aantal citys
-
->>>>>>> Stashed changes
         LinkedList<String> cityLines = new LinkedList();
         String[] cityName = new String[numberCity]; //vier city namen. daarom Arrays
         int[] cityX = new int[numberCity];//vier x coordinaten
@@ -98,11 +92,7 @@ public class WereldLaderImpl implements WereldLader {
 
             }
         }
-<<<<<<< Updated upstream
-        
-=======
 
->>>>>>> Stashed changes
         List<Stad> steden = new ArrayList();
         List<Handel> handels = new ArrayList();
 
@@ -110,15 +100,10 @@ public class WereldLaderImpl implements WereldLader {
         for (int i = 0; i < numberCity; i++) {
             if (cityX[i] == 0 && cityY[i] == 0) {
                 throw new IllegalArgumentException("Invalid coordinate for city " + cityName[i]);
-<<<<<<< Updated upstream
-            else
-            steden.add(new Stad(Coordinaat.op(cityX[i] - 1, cityY[i] - 1),cityName[i]));
-=======
-            } else //maakt steden aan
-            {
+            } else {
                 steden.add(new Stad(Coordinaat.op(cityX[i], cityY[i]), cityName[i]));
             }
->>>>>>> Stashed changes
+
         }
 
         for (int i = 0; i < numberTrades; i++) {
@@ -149,14 +134,8 @@ public class WereldLaderImpl implements WereldLader {
                 terrein[j][i] = new Terrein(kaart, Coordinaat.op(j, i), TerreinType.valueOf(getTerreinType(mapCharacters[j][i])));
             }
         }
-<<<<<<< Updated upstream
-        
-       
-        
-=======
 
         //alles klaar returend nu e world
->>>>>>> Stashed changes
         Wereld world = new Wereld(kaart, steden, markt);
 
         return world;
