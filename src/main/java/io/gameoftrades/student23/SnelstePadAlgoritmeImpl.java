@@ -50,7 +50,7 @@ public class SnelstePadAlgoritmeImpl implements SnelstePadAlgoritme,Debuggable {
             if(selectedTile.getCoordinaat().equals(eind)){
                 isNotDone = true;
                 System.out.println("Found end");
-                shortestPath(start, closedList);
+                shortestPath(start, eind,closedList);
             } else {
                 List<Coordinaat> closeListCoordinaat = new ArrayList();
                 List<Coordinaat> openListCoordinaat = new ArrayList();
@@ -118,25 +118,34 @@ public class SnelstePadAlgoritmeImpl implements SnelstePadAlgoritme,Debuggable {
         }
     }
     
-    private void shortestPath(Coordinaat start, List<Tile> closedList){
+    private void shortestPath(Coordinaat start, Coordinaat eind, List<Tile> closedList){
         
         List<Coordinaat> correctPath = new ArrayList();
         //System.out.println("ParentList");
         
-        Tile selectTile = closedList.get(closedList.size() - 1);
+        Tile selectTile;
         Boolean startFound = false;
 
-        while(!startFound){
-            if(selectTile.getParent() != null){
-                if(!selectTile.getParent().getCoordinaat().equals(start)){
-                    correctPath.add(selectTile.getParent().getCoordinaat());
-                    selectTile = selectTile.getParent();
-                } else {
-                    startFound = true;
-                }
+        for (Tile tile1 : closedList) {
+            if(tile1.getCoordinaat().equals(eind)){
+                selectTile = tile1;
                 
+                System.out.println("SelectedTile" + tile1.getCoordinaat());
+                
+                while(!startFound){
+                    if(selectTile.getParent() != null){
+                        if(!selectTile.getParent().getCoordinaat().equals(start)){
+                            correctPath.add(selectTile.getParent().getCoordinaat());
+                            selectTile = selectTile.getParent();
+                        } else {
+                            startFound = true;
+                        }
+                    }
+                }
             }
         }
+        
+        
         Pad.setPadCoordinaten(correctPath);
         
     }

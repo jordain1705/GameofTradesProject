@@ -38,26 +38,16 @@ public class PadImpl implements Pad{
     @Override
     public Richting[] getBewegingen() {
         Richting[] mogelijkeRichtingen = new Richting[padCoordinaten.size()];
+        List<Richting> mogelijkeRichtingen2 = new ArrayList();
         
-        Collections.reverse(padCoordinaten);
-        
-        for (int i = 0; i < padCoordinaten.size(); i++) {
-            if(i == padCoordinaten.size() - 1){
-                 System.out.println("End");
-            } else {
-                mogelijkeRichtingen[i] = Richting.tussen(padCoordinaten.get(i), padCoordinaten.get(i + 1));
-            }
-        }
-        
-        //mogelijkeRichtingen[padCoordinaten.size() - 1] = Richting.tussen(padCoordinaten.get(padCoordinaten.size() - 1), Eind);
+        //Collections.reverse(padCoordinaten);
         
         for (Coordinaat r : padCoordinaten) {
             System.out.println(r);
         }
         
         
-        //mogelijkeRichtingen[1] = Richting.OOST;
-        //mogelijkeRichtingen[2] = Richting.OOST;
+        mogelijkeRichtingen[0] = Richting.NOORD;
         return mogelijkeRichtingen;
     }
 
