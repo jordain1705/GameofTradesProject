@@ -30,6 +30,13 @@ public class PadImpl implements Pad{
         this.Eind = Eind;
     }
     
+    /**
+     * @return the kaart
+     */
+    public Kaart getKaart() {
+        return kaart;
+    }
+    
     @Override
     public int getTotaleTijd() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
@@ -37,23 +44,37 @@ public class PadImpl implements Pad{
 
     @Override
     public Richting[] getBewegingen() {
-        Richting[] mogelijkeRichtingen = new Richting[padCoordinaten.size()];
-        List<Richting> mogelijkeRichtingen2 = new ArrayList();
         
-        //Collections.reverse(padCoordinaten);
+        List<Richting> richtingList = new ArrayList();
         
-        for (Coordinaat r : padCoordinaten) {
-            System.out.println(r);
+        Collections.reverse(padCoordinaten);
+        
+        richtingList.add(Richting.tussen(Start, padCoordinaten.get(0)));
+        
+        Coordinaat previous = padCoordinaten.get(0);
+        
+        for (int i = 1; i < padCoordinaten.size(); i++) {
+            if(!previous.equals(Start)){
+                richtingList.add(Richting.tussen(previous, padCoordinaten.get(i)));
+                previous = padCoordinaten.get(i);
+            }
         }
         
+        richtingList.add(Richting.tussen(previous, Eind));
         
-        mogelijkeRichtingen[0] = Richting.NOORD;
+        Richting[] mogelijkeRichtingen = new Richting[richtingList.size()];
+        //mogelijkeRichtingen[0] = Richting.NOORD;
+        
+        for (int i = 0; i < richtingList.size(); i++) {
+            mogelijkeRichtingen[i] = richtingList.get(i);
+        }
+        
         return mogelijkeRichtingen;
     }
 
     @Override
     public Pad omgekeerd() {
-        PadImpl temp = new PadImpl(kaart, padCoordinaten.get(0), padCoordinaten.get(padCoordinaten.size() - 1));
+        PadImpl temp = new PadImpl(getKaart(), padCoordinaten.get(0), padCoordinaten.get(padCoordinaten.size() - 1));
         
         return temp;
     }
@@ -74,8 +95,6 @@ public class PadImpl implements Pad{
     public void setPadCoordinaten(List<Coordinaat> padCoordinaten) {
         this.padCoordinaten = padCoordinaten;
     }
+
     
-    public void newMethod(){
-        
-    }
 }

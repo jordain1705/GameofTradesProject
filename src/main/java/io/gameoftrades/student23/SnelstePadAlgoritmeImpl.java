@@ -19,38 +19,35 @@ import io.gameoftrades.debug.Debuggable;
  *
  * @author Daniel
  */
-public class SnelstePadAlgoritmeImpl implements SnelstePadAlgoritme,Debuggable {
+public class SnelstePadAlgoritmeImpl implements SnelstePadAlgoritme, Debuggable {
+
     private Debugger debug = new AsciiArtDebugger();
     PadImpl Pad;
-    
+
     @Override
     public Pad bereken(Kaart kaart, Coordinaat start, Coordinaat eind) {
         Pad = new PadImpl(kaart, start, eind);
-        
+
         double PathGValue = 0;
-        
-        List<Tile> openList = new ArrayList(); 
+
+        List<Tile> openList = new ArrayList();
         List<Tile> closedList = new ArrayList();
-        
+
         Tile startTile = new Tile(kaart, start);
-        //startTile.setGvalue(PathGValue);
         openList.add(startTile);
-        
+
         Boolean isNotDone = false;
-        
-        while(!isNotDone){
-        //for (int x = 0; x < 10; x++) {
-            //System.out.println("Step: " + x);
+
+        while (!isNotDone) {
             Tile selectedTile = calcuLowestFTile(openList, eind, PathGValue);
-            //PathGValue += selectedTile.getGValue();
-            //System.out.println("G:" + PathGValue);
+
             openList.remove(selectedTile);
             closedList.add(selectedTile);
-            
-            if(selectedTile.getCoordinaat().equals(eind)){
+
+            if (selectedTile.getCoordinaat().equals(eind)) {
                 isNotDone = true;
                 System.out.println("Found end");
-                shortestPath(start, eind,closedList);
+                shortestPath(start, eind, closedList);
             } else {
                 List<Coordinaat> closeListCoordinaat = new ArrayList();
                 List<Coordinaat> openListCoordinaat = new ArrayList();
@@ -66,14 +63,14 @@ public class SnelstePadAlgoritmeImpl implements SnelstePadAlgoritme,Debuggable {
                 List<Tile> selectedTileNB = selectedTile.getAllNeighbours();
 
                 for (Tile optionTile : selectedTileNB) {
-                    if(!closeListCoordinaat.contains(optionTile.getCoordinaat())){
-                        if(!openListCoordinaat.contains(optionTile.getCoordinaat())){
+                    if (!closeListCoordinaat.contains(optionTile.getCoordinaat())) {
+                        if (!openListCoordinaat.contains(optionTile.getCoordinaat())) {
                             openList.add(optionTile);
                             optionTile.setParent(selectedTile);
                             optionTile.setGvalue(PathGValue + optionTile.getGValue());
                         } else {
                             double ExistingGvalue = selectedTile.getHValue(eind) + selectedTile.getGValue();
-                            if(optionTile.getGValue() > ExistingGvalue){
+                            if (optionTile.getGValue() > ExistingGvalue) {
                                 optionTile.setParent(selectedTile);
                                 optionTile.setGvalue(ExistingGvalue);
                                 //optionTile.setFValue(optionTile.getHValue(eind) + PathGValue + optionTile.getGValue());
@@ -81,60 +78,46 @@ public class SnelstePadAlgoritmeImpl implements SnelstePadAlgoritme,Debuggable {
                         }
                     }
                 }
-                /*
-                System.out.println("OpenList");
-                for (Tile optionTile : openList){
-                    System.out.print(optionTile.getCoordinaat());
-                    System.out.println("");
-                }*/
-                
-                /*System.out.println("ClosedList");
-                for (Tile optionTile : closedList){
-                    System.out.print(optionTile.getCoordinaat());
-                    System.out.println("");
-                }*/
             }
         }
+
         
-        debug.debugPad(kaart, start, Pad);
- 
+
         return Pad;
     }
 
-    private Tile calcuLowestFTile(List<Tile> openList, Coordinaat eind, double PathGValue){
-        
-        if(!openList.isEmpty()){
+    private Tile calcuLowestFTile(List<Tile> openList, Coordinaat eind, double PathGValue) {
+
+        if (!openList.isEmpty()) {
             Tile lowestFTile = openList.get(0);
             for (Tile tile1 : openList) {
                 //tile1.setFValue(tile1.getHValue(eind) + PathGValue + tile1.getGValue());
-                if(tile1.getFValue() < lowestFTile.getFValue()){
+                if (tile1.getFValue() < lowestFTile.getFValue()) {
                     lowestFTile = tile1;
                 }
-                
+
             }
             return lowestFTile;
         } else {
             return null;
         }
     }
-    
-    private void shortestPath(Coordinaat start, Coordinaat eind, List<Tile> closedList){
-        
+
+    private void shortestPath(Coordinaat start, Coordinaat eind, List<Tile> closedList) {
         List<Coordinaat> correctPath = new ArrayList();
-        //System.out.println("ParentList");
-        
+
         Tile selectTile;
         Boolean startFound = false;
 
         for (Tile tile1 : closedList) {
-            if(tile1.getCoordinaat().equals(eind)){
+            if (tile1.getCoordinaat().equals(eind)) {
                 selectTile = tile1;
-                
+
                 System.out.println("SelectedTile" + tile1.getCoordinaat());
-                
-                while(!startFound){
-                    if(selectTile.getParent() != null){
-                        if(!selectTile.getParent().getCoordinaat().equals(start)){
+
+                while (!startFound) {
+                    if (selectTile.getParent() != null) {
+                        if (!selectTile.getParent().getCoordinaat().equals(start)) {
                             correctPath.add(selectTile.getParent().getCoordinaat());
                             selectTile = selectTile.getParent();
                         } else {
@@ -144,12 +127,12 @@ public class SnelstePadAlgoritmeImpl implements SnelstePadAlgoritme,Debuggable {
                 }
             }
         }
-        
-        
+
         Pad.setPadCoordinaten(correctPath);
+        debug.debugPad(Pad.getKaart(), start, Pad);
         
     }
-    
+
     @Override
     public void setDebugger(Debugger debugger) {
         this.debug = debugger;
