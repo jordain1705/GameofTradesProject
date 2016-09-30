@@ -34,20 +34,24 @@ public class SnelstePadAlgoritmeImpl implements SnelstePadAlgoritme, Debuggable 
         List<Tile> closedList = new ArrayList();
 
         Tile startTile = new Tile(kaart, start);
+        //startTile.setGvalue(PathGValue);
         openList.add(startTile);
 
-        Boolean isNotDone = false;
+        Boolean isdone = false;
 
-        while (!isNotDone) {
+        while (!isdone) {
+            //for (int x = 0; x < 10; x++) {
+            //System.out.println("Step: " + x);
             Tile selectedTile = calcuLowestFTile(openList, eind, PathGValue);
-
+            //PathGValue += selectedTile.getGValue();
+            //System.out.println("G:" + PathGValue);
             openList.remove(selectedTile);
             closedList.add(selectedTile);
 
             if (selectedTile.getCoordinaat().equals(eind)) {
-                isNotDone = true;
+                isdone = true;
                 System.out.println("Found end");
-                shortestPath(start, eind, closedList);
+                shortestPath(start, closedList);
             } else {
                 List<Coordinaat> closeListCoordinaat = new ArrayList();
                 List<Coordinaat> openListCoordinaat = new ArrayList();
@@ -57,7 +61,7 @@ public class SnelstePadAlgoritmeImpl implements SnelstePadAlgoritme, Debuggable 
                 }
 
                 for (int i = 0; i < openList.size(); i++) {
-                    openListCoordinaat.add(openList.get(i).getCoordinaat());
+                openListCoordinaat.add(openList.get(i).getCoordinaat());
                 }
 
                 List<Tile> selectedTileNB = selectedTile.getAllNeighbours();
@@ -78,10 +82,22 @@ public class SnelstePadAlgoritmeImpl implements SnelstePadAlgoritme, Debuggable 
                         }
                     }
                 }
+                /*
+                System.out.println("OpenList");
+                for (Tile optionTile : openList){
+                    System.out.print(optionTile.getCoordinaat());
+                    System.out.println("");
+                }*/
+
+ /*System.out.println("ClosedList");
+                for (Tile optionTile : closedList){
+                    System.out.print(optionTile.getCoordinaat());
+                    System.out.println("");
+                }*/
             }
         }
 
-        
+        debug.debugPad(kaart, start, Pad);
 
         return Pad;
     }
@@ -103,34 +119,27 @@ public class SnelstePadAlgoritmeImpl implements SnelstePadAlgoritme, Debuggable 
         }
     }
 
-    private void shortestPath(Coordinaat start, Coordinaat eind, List<Tile> closedList) {
-        List<Coordinaat> correctPath = new ArrayList();
+    private void shortestPath(Coordinaat start, List<Tile> closedList) {
 
-        Tile selectTile;
+        List<Coordinaat> correctPath = new ArrayList();
+        //System.out.println("ParentList");
+
+        Tile selectTile = closedList.get(closedList.size() - 1);
         Boolean startFound = false;
 
-        for (Tile tile1 : closedList) {
-            if (tile1.getCoordinaat().equals(eind)) {
-                selectTile = tile1;
-
-                System.out.println("SelectedTile" + tile1.getCoordinaat());
-
-                while (!startFound) {
-                    if (selectTile.getParent() != null) {
-                        if (!selectTile.getParent().getCoordinaat().equals(start)) {
-                            correctPath.add(selectTile.getParent().getCoordinaat());
-                            selectTile = selectTile.getParent();
-                        } else {
-                            startFound = true;
-                        }
-                    }
+        while (!startFound) {
+            if (selectTile.getParent() != null) {
+                if (!selectTile.getParent().getCoordinaat().equals(start)) {
+                    correctPath.add(selectTile.getParent().getCoordinaat());
+                    selectTile = selectTile.getParent();
+                } else {
+                    startFound = true;
                 }
+
             }
         }
-
         Pad.setPadCoordinaten(correctPath);
-        debug.debugPad(Pad.getKaart(), start, Pad);
-        
+
     }
 
     @Override
