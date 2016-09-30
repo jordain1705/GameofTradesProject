@@ -14,6 +14,7 @@ import io.gameoftrades.model.kaart.Pad;
 import java.util.ArrayList;
 import java.util.List;
 import io.gameoftrades.debug.Debuggable;
+import java.util.Collections;
 
 /**
  *
@@ -51,7 +52,7 @@ public class SnelstePadAlgoritmeImpl implements SnelstePadAlgoritme, Debuggable 
             if (selectedTile.getCoordinaat().equals(eind)) {
                 isdone = true;
                 System.out.println("Found end");
-                shortestPath(start, closedList);
+                shortestPath(start, eind,closedList);
             } else {
                 List<Coordinaat> closeListCoordinaat = new ArrayList();
                 List<Coordinaat> openListCoordinaat = new ArrayList();
@@ -119,14 +120,16 @@ public class SnelstePadAlgoritmeImpl implements SnelstePadAlgoritme, Debuggable 
         }
     }
 
-    private void shortestPath(Coordinaat start, List<Tile> closedList) {
+    private void shortestPath(Coordinaat start, Coordinaat Eind, List<Tile> closedList) {
 
         List<Coordinaat> correctPath = new ArrayList();
         //System.out.println("ParentList");
 
         Tile selectTile = closedList.get(closedList.size() - 1);
         Boolean startFound = false;
-
+        
+        correctPath.add(Eind);
+        
         while (!startFound) {
             if (selectTile.getParent() != null) {
                 if (!selectTile.getParent().getCoordinaat().equals(start)) {
@@ -138,6 +141,10 @@ public class SnelstePadAlgoritmeImpl implements SnelstePadAlgoritme, Debuggable 
 
             }
         }
+        
+        correctPath.add(start);
+        
+        Collections.reverse(correctPath);
         Pad.setPadCoordinaten(correctPath);
 
     }
