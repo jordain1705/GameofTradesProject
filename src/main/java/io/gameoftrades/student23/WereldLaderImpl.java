@@ -101,7 +101,7 @@ public class WereldLaderImpl implements WereldLader {
             if (cityX[i] == 0 && cityY[i] == 0) {
                 throw new IllegalArgumentException("Invalid coordinate for city " + cityName[i]);
             } else {
-                steden.add(new Stad(Coordinaat.op(cityX[i], cityY[i]), cityName[i]));
+                steden.add(new Stad(Coordinaat.op(cityX[i] - 1, cityY[i] - 1), cityName[i]));
             }
 
         }
