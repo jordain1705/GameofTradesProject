@@ -37,19 +37,29 @@ public class PadImpl implements Pad{
 
     @Override
     public Richting[] getBewegingen() {
-        Richting[] mogelijkeRichtingen = new Richting[padCoordinaten.size()];
         
         Collections.reverse(padCoordinaten);
         
-        for (int i = 0; i < padCoordinaten.size(); i++) {
-            if(i == padCoordinaten.size() - 1){
-                 System.out.println("End");
-            } else {
-                mogelijkeRichtingen[i] = Richting.tussen(padCoordinaten.get(i), padCoordinaten.get(i + 1));
+        List<Richting> richtingList = new ArrayList();
+        
+        richtingList.add(Richting.tussen(Start, padCoordinaten.get(0)));
+        
+        Coordinaat previous = padCoordinaten.get(0);
+        
+        for (int i = 1; i < padCoordinaten.size(); i++) {
+            if(!previous.equals(Start)){
+                richtingList.add(Richting.tussen(previous, padCoordinaten.get(i)));
+                previous = padCoordinaten.get(i);
             }
         }
         
-        //mogelijkeRichtingen[padCoordinaten.size() - 1] = Richting.tussen(padCoordinaten.get(padCoordinaten.size() - 1), Eind);
+        richtingList.add(Richting.tussen(previous, Eind));
+        
+        Richting[] mogelijkeRichtingen = new Richting[richtingList.size()];
+        
+        for (int i = 0; i < richtingList.size(); i++) {
+            mogelijkeRichtingen[i] = richtingList.get(i);
+        }
         
         for (Coordinaat r : padCoordinaten) {
             System.out.println(r);
