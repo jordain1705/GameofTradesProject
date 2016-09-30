@@ -34,32 +34,24 @@ public class SnelstePadAlgoritmeImpl implements SnelstePadAlgoritme, Debuggable 
         List<Tile> closedList = new ArrayList();
 
         Tile startTile = new Tile(kaart, start);
+        //startTile.setGvalue(PathGValue);
         openList.add(startTile);
 
-<<<<<<< HEAD
         Boolean isdone = false;
 
         while (!isdone) {
             //for (int x = 0; x < 10; x++) {
             //System.out.println("Step: " + x);
-=======
-        Boolean isNotDone = false;
-
-        while (!isNotDone) {
->>>>>>> master
             Tile selectedTile = calcuLowestFTile(openList, eind, PathGValue);
-
+            //PathGValue += selectedTile.getGValue();
+            //System.out.println("G:" + PathGValue);
             openList.remove(selectedTile);
             closedList.add(selectedTile);
 
             if (selectedTile.getCoordinaat().equals(eind)) {
-<<<<<<< HEAD
                 isdone = true;
-=======
-                isNotDone = true;
->>>>>>> master
                 System.out.println("Found end");
-                shortestPath(start, eind, closedList);
+                shortestPath(start, closedList);
             } else {
                 List<Coordinaat> closeListCoordinaat = new ArrayList();
                 List<Coordinaat> openListCoordinaat = new ArrayList();
@@ -90,7 +82,6 @@ public class SnelstePadAlgoritmeImpl implements SnelstePadAlgoritme, Debuggable 
                         }
                     }
                 }
-<<<<<<< HEAD
                 /*
                 System.out.println("OpenList");
                 for (Tile optionTile : openList){
@@ -107,12 +98,6 @@ public class SnelstePadAlgoritmeImpl implements SnelstePadAlgoritme, Debuggable 
         }
 
         debug.debugPad(kaart, start, Pad);
-=======
-            }
-        }
-
-        
->>>>>>> master
 
         return Pad;
     }
@@ -134,7 +119,6 @@ public class SnelstePadAlgoritmeImpl implements SnelstePadAlgoritme, Debuggable 
         }
     }
 
-<<<<<<< HEAD
     private void shortestPath(Coordinaat start, List<Tile> closedList) {
 
         List<Coordinaat> correctPath = new ArrayList();
@@ -152,40 +136,10 @@ public class SnelstePadAlgoritmeImpl implements SnelstePadAlgoritme, Debuggable 
                     startFound = true;
                 }
 
-=======
-    private void shortestPath(Coordinaat start, Coordinaat eind, List<Tile> closedList) {
-        List<Coordinaat> correctPath = new ArrayList();
-
-        Tile selectTile;
-        Boolean startFound = false;
-
-        for (Tile tile1 : closedList) {
-            if (tile1.getCoordinaat().equals(eind)) {
-                selectTile = tile1;
-
-                System.out.println("SelectedTile" + tile1.getCoordinaat());
-
-                while (!startFound) {
-                    if (selectTile.getParent() != null) {
-                        if (!selectTile.getParent().getCoordinaat().equals(start)) {
-                            correctPath.add(selectTile.getParent().getCoordinaat());
-                            selectTile = selectTile.getParent();
-                        } else {
-                            startFound = true;
-                        }
-                    }
-                }
->>>>>>> master
             }
         }
-
         Pad.setPadCoordinaten(correctPath);
-<<<<<<< HEAD
 
-=======
-        debug.debugPad(Pad.getKaart(), start, Pad);
-        
->>>>>>> master
     }
 
     @Override
