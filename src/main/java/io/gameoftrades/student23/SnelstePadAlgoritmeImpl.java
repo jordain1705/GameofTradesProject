@@ -27,7 +27,7 @@ public class SnelstePadAlgoritmeImpl implements SnelstePadAlgoritme, Debuggable 
 
     @Override
     public Pad bereken(Kaart kaart, Coordinaat start, Coordinaat eind) {
-        Pad = new PadImpl(kaart, start, eind);
+        Pad = new PadImpl(kaart);
 
         double PathGValue = 0;
 

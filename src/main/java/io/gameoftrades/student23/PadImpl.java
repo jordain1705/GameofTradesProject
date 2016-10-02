@@ -10,6 +10,7 @@ import io.gameoftrades.model.kaart.Kaart;
 import io.gameoftrades.model.kaart.Pad;
 import io.gameoftrades.model.kaart.Richting;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
@@ -21,25 +22,19 @@ public class PadImpl implements Pad{
     private List<Coordinaat> padCoordinaten = new ArrayList();
     
     Kaart kaart;
-    Coordinaat Start, Eind;
     
-    
-    public PadImpl(Kaart kaart, Coordinaat Start, Coordinaat Eind){
+    public PadImpl(Kaart kaart){
         this.kaart = kaart;
-        this.Start = Start;
-        this.Eind = Eind;
     }
     
     @Override
     public int getTotaleTijd() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return padCoordinaten.size();
     }
 
     @Override
     public Richting[] getBewegingen() {
-        
-        
-        
+       
         List<Richting> richtingList = new ArrayList();
         
         for (int i = 0; i < padCoordinaten.size() - 1; i++) {
@@ -60,9 +55,14 @@ public class PadImpl implements Pad{
 
     @Override
     public Pad omgekeerd() {
-        PadImpl temp = new PadImpl(kaart, padCoordinaten.get(0), padCoordinaten.get(padCoordinaten.size() - 1));
+        PadImpl reversePath = new PadImpl(kaart);
+        List<Coordinaat> reverseList = padCoordinaten;
         
-        return temp;
+        Collections.reverse(reverseList);
+        
+        reversePath.setPadCoordinaten(reverseList);
+        
+        return reversePath;
     }
 
     @Override
