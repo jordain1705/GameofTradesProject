@@ -33,6 +33,7 @@ public class SnelstePadAlgoritmeImpl implements SnelstePadAlgoritme, Debuggable 
 
         List<Tile> openList = new ArrayList();
         List<Tile> closedList = new ArrayList();
+        
 
         Tile startTile = new Tile(kaart, start);
         //startTile.setGvalue(PathGValue);
