@@ -64,7 +64,7 @@ public class StedenTourAlgoritmeImpl implements StedenTourAlgoritme, Debuggable 
                 map.put(get, gvalue);
             }
 
-            //checked de korste afstand
+            //checked de kleinste Gvalue
             Entry<Stad, Double> min = null;
             for (Entry<Stad, Double> entry : map.entrySet()) {
                 if (min == null || min.getValue() > entry.getValue()) {
@@ -72,12 +72,14 @@ public class StedenTourAlgoritmeImpl implements StedenTourAlgoritme, Debuggable 
                 }
             }
 
-            //voeg korsteafstand stad toe 
+          
             Stad closest = min.getKey();
             startstad = closest;
             kosten = kosten + min.getValue();
             kortsteafstandenstad.add(startstad);
             thelist.remove(startstad);
+            
+            //end en print kosten
             if (thelist.isEmpty()) {
                 System.out.println(kosten);
                 break;
