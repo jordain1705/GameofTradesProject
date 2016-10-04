@@ -40,10 +40,12 @@ public class StedenTourAlgoritmeImpl implements StedenTourAlgoritme, Debuggable 
         Stad startstad; // eerste stad waar je begint
 
         ListIterator<Stad> iterator = thelist.listIterator();
+        double kosten = 0;
 
         List<Stad> kortsteafstandenstad = new ArrayList<>();
         Map<Stad, Double> map;
         startstad = thelist.get(0);
+        kortsteafstandenstad.add(startstad);
         thelist.remove(0);
         while (iterator.hasNext()) {
 
@@ -58,6 +60,7 @@ public class StedenTourAlgoritmeImpl implements StedenTourAlgoritme, Debuggable 
                 }
                 PadImpl pad = (PadImpl) impl1.bereken(kaart, startstad.getCoordinaat(), get.getCoordinaat());
                 double gvalue = pad.getPathGValue();
+                
                 map.put(get, gvalue);
             }
 
@@ -72,10 +75,11 @@ public class StedenTourAlgoritmeImpl implements StedenTourAlgoritme, Debuggable 
             //voeg korsteafstand stad toe 
             Stad closest = min.getKey();
             startstad = closest;
-
+            kosten = kosten + min.getValue();
             kortsteafstandenstad.add(startstad);
             thelist.remove(startstad);
             if (thelist.isEmpty()) {
+                System.out.println(kosten);
                 break;
             }
         }
