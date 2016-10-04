@@ -21,7 +21,7 @@ public class Tile{
     Coordinaat position;
     List<Tile> neighbours = new ArrayList();
     private Tile parent;
-    private double gValue, FValue; 
+    private int gValue, FValue; 
     private int hValue = 0;
     
     public Tile(Kaart kaart, Coordinaat position){
@@ -47,24 +47,24 @@ public class Tile{
         return position.getY();
     }
 
-    public double getGValue(){
+    public int getGValue(){
         return this.gValue;
     }
     
-    public void setGvalue(double gValue){
+    public void setGvalue(int gValue){
         this.gValue = gValue;
     }
     
-    public double getHValue(Coordinaat c){   
+    public int getHValue(Coordinaat c){   
         hValue = (Math.abs(position.getX() - c.getX()) + Math.abs(position.getY() - c.getY()));
         return hValue;
     }
     
-    public double getFValue() {
+    public int getFValue() {
         return FValue;
     }
 
-    public void setFValue(double FValue) {
+    public void setFValue(int FValue) {
         this.FValue = FValue;
     }
 

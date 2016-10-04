@@ -29,12 +29,9 @@ public class SnelstePadAlgoritmeImpl implements SnelstePadAlgoritme, Debuggable 
     public Pad bereken(Kaart kaart, Coordinaat start, Coordinaat eind) {
         Pad = new PadImpl(kaart);
 
-        double PathGValue = 0;
-
         List<Tile> openList = new ArrayList();
         List<Tile> closedList = new ArrayList();
         
-
         Tile startTile = new Tile(kaart, start);
         //startTile.setGvalue(PathGValue);
         openList.add(startTile);
@@ -44,8 +41,7 @@ public class SnelstePadAlgoritmeImpl implements SnelstePadAlgoritme, Debuggable 
         while (!isdone) {
             //for (int x = 0; x < 10; x++) {
             //System.out.println("Step: " + x);
-            Tile selectedTile = calcuLowestFTile(openList, eind, PathGValue);
-            //PathGValue += selectedTile.getGValue();
+            Tile selectedTile = calcuLowestFTile(openList);
             //System.out.println("G:" + PathGValue);
             openList.remove(selectedTile);
             closedList.add(selectedTile);
@@ -73,9 +69,10 @@ public class SnelstePadAlgoritmeImpl implements SnelstePadAlgoritme, Debuggable 
                         if (!openListCoordinaat.contains(optionTile.getCoordinaat())) {
                             openList.add(optionTile);
                             optionTile.setParent(selectedTile);
-                            optionTile.setGvalue(PathGValue + optionTile.getGValue());
+                            optionTile.setGvalue(optionTile.getGValue());
+                            
                         } else {
-                            double ExistingGvalue = selectedTile.getHValue(eind) + selectedTile.getGValue();
+                            int ExistingGvalue = selectedTile.getHValue(eind) + selectedTile.getGValue();
                             if (optionTile.getGValue() > ExistingGvalue) {
                                 optionTile.setParent(selectedTile);
                                 optionTile.setGvalue(ExistingGvalue);
@@ -84,27 +81,15 @@ public class SnelstePadAlgoritmeImpl implements SnelstePadAlgoritme, Debuggable 
                         }
                     }
                 }
-                /*
-                System.out.println("OpenList");
-                for (Tile optionTile : openList){
-                    System.out.print(optionTile.getCoordinaat());
-                    System.out.println("");
-                }*/
-
- /*System.out.println("ClosedList");
-                for (Tile optionTile : closedList){
-                    System.out.print(optionTile.getCoordinaat());
-                    System.out.println("");
-                }*/
             }
         }
-
+        
         debug.debugPad(kaart, start, Pad);
-
+        
         return Pad;
     }
 
-    private Tile calcuLowestFTile(List<Tile> openList, Coordinaat eind, double PathGValue) {
+    private Tile calcuLowestFTile(List<Tile> openList) {
 
         if (!openList.isEmpty()) {
             Tile lowestFTile = openList.get(0);
@@ -129,6 +114,8 @@ public class SnelstePadAlgoritmeImpl implements SnelstePadAlgoritme, Debuggable 
         Tile selectTile = closedList.get(closedList.size() - 1);
         Boolean startFound = false;
         
+        int PathGValue = 0;
+        
         correctPath.add(Eind);
         
         while (!startFound) {
@@ -136,6 +123,7 @@ public class SnelstePadAlgoritmeImpl implements SnelstePadAlgoritme, Debuggable 
                 if (!selectTile.getParent().getCoordinaat().equals(start)) {
                     correctPath.add(selectTile.getParent().getCoordinaat());
                     selectTile = selectTile.getParent();
+                    PathGValue += selectTile.getGValue();
                 } else {
                     startFound = true;
                 }
@@ -146,8 +134,9 @@ public class SnelstePadAlgoritmeImpl implements SnelstePadAlgoritme, Debuggable 
         correctPath.add(start);
         
         Collections.reverse(correctPath);
-        Pad.setPadCoordinaten(correctPath);
+        Pad.setPathGValue(PathGValue);
 
+        Pad.setPadCoordinaten(correctPath);
     }
 
     @Override
