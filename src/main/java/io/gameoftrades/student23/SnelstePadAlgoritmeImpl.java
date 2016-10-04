@@ -53,7 +53,7 @@ public class SnelstePadAlgoritmeImpl implements SnelstePadAlgoritme, Debuggable 
             } else {
                 List<Coordinaat> closeListCoordinaat = new ArrayList();
                 List<Coordinaat> openListCoordinaat = new ArrayList();
-
+                System.out.println("boom");
                 for (int i = 0; i < closedList.size(); i++) {
                     closeListCoordinaat.add(closedList.get(i).getCoordinaat());
                 }
@@ -88,7 +88,7 @@ public class SnelstePadAlgoritmeImpl implements SnelstePadAlgoritme, Debuggable 
         
         return Pad;
     }
-
+ 
     private Tile calcuLowestFTile(List<Tile> openList) {
 
         if (!openList.isEmpty()) {

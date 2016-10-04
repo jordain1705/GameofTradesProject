@@ -7,6 +7,7 @@ package io.gameoftrades.student23;
 
 import io.gameoftrades.debug.Debuggable;
 import io.gameoftrades.debug.Debugger;
+import io.gameoftrades.model.algoritme.SnelstePadAlgoritme;
 import io.gameoftrades.model.algoritme.StedenTourAlgoritme;
 import io.gameoftrades.model.kaart.Kaart;
 import io.gameoftrades.model.kaart.Stad;
@@ -15,6 +16,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
+import java.util.Map.Entry;
 
 /**
  *
@@ -22,7 +24,6 @@ import java.util.Map;
  */
 public class StedenTourAlgoritmeImpl implements StedenTourAlgoritme, Debuggable {
 
-    SnelstePadAlgoritmeImpl impl1 = new SnelstePadAlgoritmeImpl();
     Debugger debug;
 
     @Override
@@ -33,42 +34,47 @@ public class StedenTourAlgoritmeImpl implements StedenTourAlgoritme, Debuggable 
     }
 
     public List<Stad> findNearest(Kaart kaart, List<Stad> list) {
-        
-        List<Stad> thelist  = new ArrayList(list);
-     
+
+        List<Stad> thelist = new ArrayList(list);
+        SnelstePadAlgoritme impl1 = new SnelstePadAlgoritmeImpl();
         Stad startstad; // eerste stad waar je begint
 
         ListIterator<Stad> iterator = thelist.listIterator();
 
         List<Stad> kortsteafstandenstad = new ArrayList<>();
-
+        Map<Stad, Double> map;
         startstad = thelist.get(0);
+        thelist.remove(0);
         while (iterator.hasNext()) {
-          
-             Map<Stad, Double> map = new HashMap<>();
-            
+
+            map = new HashMap<Stad, Double>();
+
             for (int i = 0; i < thelist.size(); i++) {
                 Stad get = thelist.get(i);
-                
-                double afstand = startstad.getCoordinaat().afstandTot(get.getCoordinaat());
-                map.put(get, afstand);
+
+                //double afstand = startstad.getCoordinaat().afstandTot(get.getCoordinaat());
+                if (startstad.getCoordinaat() == get.getCoordinaat()) {
+                    System.out.println("bo mama");
+                }
+                PadImpl pad = (PadImpl) impl1.bereken(kaart, startstad.getCoordinaat(), get.getCoordinaat());
+                double gvalue = pad.getPathGValue();
+                map.put(get, gvalue);
             }
 
-             //checked de korste afstand
-            Map.Entry<Stad, Double> minEntry = null;
-            for (Map.Entry<Stad, Double> entry : map.entrySet()) {
-                if (minEntry == null || entry.getValue() < minEntry.getValue()) {
-                    minEntry = entry;
+            //checked de korste afstand
+            Entry<Stad, Double> min = null;
+            for (Entry<Stad, Double> entry : map.entrySet()) {
+                if (min == null || min.getValue() > entry.getValue()) {
+                    min = entry;
                 }
-                
-                
             }
+
             //voeg korsteafstand stad toe 
+            Stad closest = min.getKey();
+            startstad = closest;
+
             kortsteafstandenstad.add(startstad);
             thelist.remove(startstad);
-            Stad closest = minEntry.getKey();
-            startstad = closest;
-          
             if (thelist.isEmpty()) {
                 break;
             }
