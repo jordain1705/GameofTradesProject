@@ -10,7 +10,6 @@ import io.gameoftrades.model.kaart.Kaart;
 import io.gameoftrades.model.kaart.Pad;
 import io.gameoftrades.model.kaart.Richting;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
@@ -22,6 +21,7 @@ public class PadImpl implements Pad{
     private List<Coordinaat> padCoordinaten = new ArrayList();
     
     Kaart kaart;
+    private int pathGValue = 0;
     
     public PadImpl(Kaart kaart){
         this.kaart = kaart;
@@ -49,6 +49,8 @@ public class PadImpl implements Pad{
             mogelijkeRichtingen[i] = richtingList.get(i);
         }
         
+        System.out.println(pathGValue);
+        
         richtingList.removeAll(richtingList);
         return mogelijkeRichtingen;
     }
@@ -67,7 +69,12 @@ public class PadImpl implements Pad{
 
     @Override
     public Coordinaat volg(Coordinaat start) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        if(start.equals(padCoordinaten.get(0))){
+            return padCoordinaten.get(padCoordinaten.size() - 1);
+        }
+        else{
+            throw new IllegalArgumentException("Invalid Start coordinaat");
+        }
     }
     
     /**
@@ -82,7 +89,17 @@ public class PadImpl implements Pad{
         this.padCoordinaten = padCoordinaten;
     }
     
-    public void newMethod(){
-        
+    /**
+     * @return the pathGValue
+     */
+    public int getPathGValue() {
+        return pathGValue;
+    }
+
+    /**
+     * @param pathGValue the pathGValue to set
+     */
+    public void setPathGValue(int pathGValue) {
+        this.pathGValue = pathGValue;
     }
 }
