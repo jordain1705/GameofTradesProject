@@ -5,7 +5,10 @@
  */
 package io.gameoftrades.student23;
 
+import io.gameoftrades.model.Wereld;
 import io.gameoftrades.model.algoritme.SnelstePadAlgoritme;
+import io.gameoftrades.model.kaart.Coordinaat;
+import io.gameoftrades.model.kaart.Pad;
 import io.gameoftrades.model.lader.WereldLader;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -19,18 +22,24 @@ import org.junit.Test;
  */
 public class SnelstePadAlgoritmeImplTest {
             
-    private SnelstePadAlgoritme snelPadLader;
+    private SnelstePadAlgoritmeImpl SnelstePadLader;
     private WereldLader wereldLader;
 
     @Before
     public void init() {
-        snelPadLader = new SnelstePadAlgoritmeImpl();
+        SnelstePadLader = new SnelstePadAlgoritmeImpl();
         wereldLader = new WereldLaderImpl();
     }
 
     @Test
-    public void Test() {
+    public void eindPuntCheck() {
+        Wereld wereld = wereldLader.laad("/kaarten/westeros-kaart.txt");
+        PadImpl TestPad;
+        TestPad = SnelstePadLader.aStarAlgoritme(wereld.getKaart(), Coordinaat.op(15, 17), Coordinaat.op(14, 46));
         
+        assertTrue();
+        
+        TestPad.getPadCoordinaten();
     }
     
 }
