@@ -24,6 +24,7 @@ public class SnelstePadAlgoritmeImpl implements SnelstePadAlgoritme, Debuggable 
 
     private Debugger debug = new AsciiArtDebugger();
     PadImpl Pad;
+    
 
     @Override
     public Pad bereken(Kaart kaart, Coordinaat start, Coordinaat eind) {

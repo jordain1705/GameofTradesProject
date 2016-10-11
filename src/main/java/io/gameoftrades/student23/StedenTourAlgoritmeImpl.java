@@ -25,10 +25,16 @@ import java.util.Map.Entry;
 public class StedenTourAlgoritmeImpl implements StedenTourAlgoritme, Debuggable {
 
     Debugger debug;
-    SnelstePadAlgoritme SnelstePimpl = new SnelstePadAlgoritmeImpl();
-    Map<Stad, Double> map = new HashMap<>();
-    List<Stad> kortsteafstandenstad = new ArrayList<>();
-    PadImpl pad;
+    private SnelstePadAlgoritmeImpl SnelstePimpl;
+    private Map<Stad, Double> map ;
+    private List<Stad> kortsteafstandenstad ;
+   private  PadImpl pad;
+
+    public StedenTourAlgoritmeImpl() {
+        kortsteafstandenstad = new ArrayList<>();
+        map= new HashMap<>();
+        SnelstePimpl = new SnelstePadAlgoritmeImpl();
+    }
 
     @Override
     public List<Stad> bereken(Kaart kaart, List<Stad> steden) {
@@ -51,7 +57,7 @@ public class StedenTourAlgoritmeImpl implements StedenTourAlgoritme, Debuggable 
 
             for (int i = 0; i < lijstvanSteden.size(); i++) {
                 Stad get = lijstvanSteden.get(i);
-                pad = (PadImpl) SnelstePimpl.bereken(kaart, startstad.getCoordinaat(), get.getCoordinaat());
+                pad = SnelstePimpl.aStarAlgoritme(kaart, startstad.getCoordinaat(), get.getCoordinaat());
                 double gvalue = pad.getPathGValue();
                 map.put(get, gvalue);
             }
@@ -71,7 +77,7 @@ public class StedenTourAlgoritmeImpl implements StedenTourAlgoritme, Debuggable 
         return kortsteafstandenstad;
     }
 
-    public Entry<Stad, Double> MinGvalueCity() {
+    private Entry<Stad, Double> MinGvalueCity() {
         Entry<Stad, Double> min = null;
         for (Entry<Stad, Double> entry : map.entrySet()) {
             if (min == null || min.getValue() > entry.getValue()) {
