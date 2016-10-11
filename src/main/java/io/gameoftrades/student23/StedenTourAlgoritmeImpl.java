@@ -26,6 +26,10 @@ public class StedenTourAlgoritmeImpl implements StedenTourAlgoritme, Debuggable 
     Debugger debug;
     private SnelstePadAlgoritmeImpl SnelstePimpl;
     private Map<Stad, Double> map ;
+    
+     //private Map<List<Stad>, Double> beginstadmap ;
+     
+     
     private List<Stad> kortsteafstandenstad ;
    private  PadImpl pad;
 
@@ -33,6 +37,7 @@ public class StedenTourAlgoritmeImpl implements StedenTourAlgoritme, Debuggable 
         kortsteafstandenstad = new ArrayList<>();
         map= new HashMap<>();
         SnelstePimpl = new SnelstePadAlgoritmeImpl();
+        //beginstadmap=new HashMap<>();
     }
 
     @Override
@@ -47,10 +52,17 @@ public class StedenTourAlgoritmeImpl implements StedenTourAlgoritme, Debuggable 
         List<Stad> lijstvanSteden = new ArrayList(list);
         ListIterator<Stad> iterator = lijstvanSteden.listIterator();
 
-        Stad startstad = lijstvanSteden.get(0); // eerste stad waar je begint
-        double kosten = 0;
-        kortsteafstandenstad.add(startstad);
-        lijstvanSteden.remove(0);
+        Stad startstad = lijstvanSteden.get(0);//
+        double kosten = 0;//
+        kortsteafstandenstad.add(startstad);//
+        lijstvanSteden.remove(0);//
+        
+        //for (int j = 0; j < list.size(); j++) {
+      
+            //Stad startstad = lijstvanSteden.get(j);
+            //kortsteafstandenstad.add(startstad);
+        //double kosten = 0;
+         //lijstvanSteden.remove(j);
 
         while (iterator.hasNext()) {
 
@@ -72,7 +84,11 @@ public class StedenTourAlgoritmeImpl implements StedenTourAlgoritme, Debuggable 
                 System.out.println(kosten);
             }
         }
-
+        //lijstvanSteden=list;
+        //beginstadmap.put(kortsteafstandenstad,kosten);
+        //kortsteafstandenstad.clear();
+        
+    //}
         return kortsteafstandenstad;
     }
 
@@ -85,6 +101,17 @@ public class StedenTourAlgoritmeImpl implements StedenTourAlgoritme, Debuggable 
         }
         return min;
     }
+    /*
+     private Entry<List<Stad>, Double> bestebeginstad() {
+        Entry<List<Stad>, Double> min = null;
+        for (Entry<List<Stad>, Double> entry : beginstadmap.entrySet()) {
+            if (min == null || min.getValue() > entry.getValue()) {
+                min = entry;
+            }
+        }
+        return min;
+    }
+*/
 
     @Override
     public void setDebugger(Debugger debugger) {
