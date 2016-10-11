@@ -9,7 +9,11 @@ import io.gameoftrades.model.Wereld;
 import io.gameoftrades.model.algoritme.SnelstePadAlgoritme;
 import io.gameoftrades.model.kaart.Coordinaat;
 import io.gameoftrades.model.kaart.Pad;
+import io.gameoftrades.model.kaart.Stad;
+import io.gameoftrades.model.kaart.Terrein;
+import io.gameoftrades.model.kaart.TerreinType;
 import io.gameoftrades.model.lader.WereldLader;
+import java.util.List;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
@@ -32,14 +36,24 @@ public class SnelstePadAlgoritmeImplTest {
     }
 
     @Test
-    public void eindPuntCheck() {
+    public void StadCheck() {
         Wereld wereld = wereldLader.laad("/kaarten/westeros-kaart.txt");
         PadImpl TestPad;
-        TestPad = SnelstePadLader.aStarAlgoritme(wereld.getKaart(), Coordinaat.op(15, 17), Coordinaat.op(14, 46));
+        TestPad = SnelstePadLader.aStarAlgoritme(wereld.getKaart(), Coordinaat.op(14, 16), Coordinaat.op(13, 45));
         
-        assertTrue();
+        assertEquals(TerreinType.STAD,  wereld.getKaart().getTerreinOp(TestPad.getPadCoordinaten().get(0)).getTerreinType());
+        assertEquals(TerreinType.STAD,  wereld.getKaart().getTerreinOp(TestPad.getPadCoordinaten().get(TestPad.getPadCoordinaten().size() - 1)).getTerreinType());
+    }
+    
+    @Test
+    public void PathGCost(){
+        Wereld wereld = wereldLader.laad("/kaarten/voorbeeld-kaart.txt");
+        PadImpl TestPad;
+        List<Stad> TestStadList = wereld.getSteden();
         
-        TestPad.getPadCoordinaten();
+        TestPad = SnelstePadLader.aStarAlgoritme(wereld.getKaart(), TestStadList.get(0).getCoordinaat(), TestStadList.get(1).getCoordinaat());
+        
+        assertEquals(18, TestPad.getPathGValue());
     }
     
 }
