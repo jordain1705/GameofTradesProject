@@ -53,7 +53,7 @@ public class SnelstePadAlgoritmeImplTest {
         
         TestPad = SnelstePadLader.aStarAlgoritme(wereld.getKaart(), TestStadList.get(0).getCoordinaat(), TestStadList.get(1).getCoordinaat());
         
-        assertEquals(18, TestPad.getPathGValue());
+        assertEquals(19, TestPad.getPathGValue());
     }
     
 }

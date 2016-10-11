@@ -42,6 +42,7 @@ public class SnelstePadAlgoritmeImpl implements SnelstePadAlgoritme, Debuggable 
         List<Tile> closedList = new ArrayList();
         
         Tile startTile = new Tile(kaart, start);
+        startTile.setGvalue(0);
         openList.add(startTile);
 
         Boolean isdone = false;
@@ -53,7 +54,7 @@ public class SnelstePadAlgoritmeImpl implements SnelstePadAlgoritme, Debuggable 
 
             if (selectedTile.getCoordinaat().equals(eind)) {
                 isdone = true;
-                shortestPath(start, eind,closedList);
+                shortestPath(kaart, start, eind,closedList);
             } else {
                 List<Coordinaat> closeListCoordinaat = new ArrayList();
                 List<Coordinaat> openListCoordinaat = new ArrayList();
@@ -73,13 +74,15 @@ public class SnelstePadAlgoritmeImpl implements SnelstePadAlgoritme, Debuggable 
                         if (!openListCoordinaat.contains(optionTile.getCoordinaat())) {
                             openList.add(optionTile);
                             optionTile.setParent(selectedTile);
-                            optionTile.setGvalue(optionTile.getGValue());
-                            
+                            optionTile.setGvalue(selectedTile.getGValue() + optionTile.getGValue());
+                            optionTile.setFValue(optionTile.getGValue() + optionTile.getHValue(eind));
                         } else {
-                            int ExistingGvalue = selectedTile.getHValue(eind) + selectedTile.getGValue();
-                            if (optionTile.getGValue() > ExistingGvalue) {
+                            int ExistingFvalue = selectedTile.getHValue(eind) + selectedTile.getGValue();
+                            
+                            if (optionTile.getFValue() < ExistingFvalue) {
                                 optionTile.setParent(selectedTile);
-                                optionTile.setGvalue(ExistingGvalue);
+                                optionTile.setGvalue(selectedTile.getGValue() + optionTile.getGValue());
+                                optionTile.setFValue(ExistingFvalue);
                             }
                         }
                     }
@@ -107,7 +110,7 @@ public class SnelstePadAlgoritmeImpl implements SnelstePadAlgoritme, Debuggable 
         }
     }
 
-    private void shortestPath(Coordinaat start, Coordinaat Eind, List<Tile> closedList) {
+    private void shortestPath(Kaart kaart, Coordinaat start, Coordinaat Eind, List<Tile> closedList) {
 
         List<Coordinaat> correctPath = new ArrayList();
 
@@ -120,10 +123,11 @@ public class SnelstePadAlgoritmeImpl implements SnelstePadAlgoritme, Debuggable 
         
         while (!startFound) {
             if (selectTile.getParent() != null) {
+               PathGValue += selectTile.getGValue();
+                
                 if (!selectTile.getParent().getCoordinaat().equals(start)) {
                     correctPath.add(selectTile.getParent().getCoordinaat());
                     selectTile = selectTile.getParent();
-                    PathGValue += selectTile.getGValue();
                 } else {
                     startFound = true;
                 }
@@ -136,6 +140,7 @@ public class SnelstePadAlgoritmeImpl implements SnelstePadAlgoritme, Debuggable 
         Collections.reverse(correctPath);
         Pad.setPathGValue(PathGValue);
 
+        
         Pad.setPadCoordinaten(correctPath);
     }
 
