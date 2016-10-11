@@ -146,7 +146,7 @@ public class WereldLaderImpl implements WereldLader {
 
         while (in.hasNext()) {
             String temp = in.nextLine();
-            //System.out.println(temp);
+            System.out.println(temp);
         }
 
     }

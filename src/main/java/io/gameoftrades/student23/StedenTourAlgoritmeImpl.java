@@ -7,16 +7,15 @@ package io.gameoftrades.student23;
 
 import io.gameoftrades.debug.Debuggable;
 import io.gameoftrades.debug.Debugger;
-import io.gameoftrades.model.algoritme.SnelstePadAlgoritme;
 import io.gameoftrades.model.algoritme.StedenTourAlgoritme;
 import io.gameoftrades.model.kaart.Kaart;
-import io.gameoftrades.model.kaart.Pad;
 import io.gameoftrades.model.kaart.Stad;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
+import java.util.Map.Entry;
 
 /**
  *
@@ -24,8 +23,22 @@ import java.util.Map;
  */
 public class StedenTourAlgoritmeImpl implements StedenTourAlgoritme, Debuggable {
 
-    SnelstePadAlgoritmeImpl impl1 = new SnelstePadAlgoritmeImpl();
     Debugger debug;
+    private SnelstePadAlgoritmeImpl SnelstePimpl;
+    private Map<Stad, Double> map ;
+    
+     //private Map<List<Stad>, Double> beginstadmap ;
+     
+     
+    private List<Stad> kortsteafstandenstad ;
+   private  PadImpl pad;
+
+    public StedenTourAlgoritmeImpl() {
+        kortsteafstandenstad = new ArrayList<>();
+        map= new HashMap<>();
+        SnelstePimpl = new SnelstePadAlgoritmeImpl();
+        //beginstadmap=new HashMap<>();
+    }
 
     @Override
     public List<Stad> bereken(Kaart kaart, List<Stad> steden) {
@@ -35,61 +48,70 @@ public class StedenTourAlgoritmeImpl implements StedenTourAlgoritme, Debuggable 
     }
 
     public List<Stad> findNearest(Kaart kaart, List<Stad> list) {
-        List<Stad> thelist = new ArrayList(list);
-        List<Stad> kortsteafstandenstad = new ArrayList<>();
 
-        SnelstePadAlgoritme snel = new SnelstePadAlgoritmeImpl();
+        List<Stad> lijstvanSteden = new ArrayList(list);
+        ListIterator<Stad> iterator = lijstvanSteden.listIterator();
 
-        //   pad.getPathGValue();
-        Stad startstad; // eerste stad waar je begint
+        Stad startstad = lijstvanSteden.get(0);//
+        double kosten = 0;//
+        kortsteafstandenstad.add(startstad);//
+        lijstvanSteden.remove(0);//
+        
+        //for (int j = 0; j < list.size(); j++) {
+      
+            //Stad startstad = lijstvanSteden.get(j);
+            //kortsteafstandenstad.add(startstad);
+        //double kosten = 0;
+         //lijstvanSteden.remove(j);
 
-        ListIterator<Stad> iterator = list.listIterator();
-
-        startstad = thelist.get(0);
-        boolean isdone = true;
         while (iterator.hasNext()) {
-            
 
-            Map<Stad, Double> map = new HashMap<>();
-
-            for (int i = 1; i < thelist.size(); i++) {
-                Stad get = thelist.get(i);
-               PadImpl pad = (PadImpl) snel.bereken(kaart, startstad.getCoordinaat(), get.getCoordinaat());
+            for (int i = 0; i < lijstvanSteden.size(); i++) {
+                Stad get = lijstvanSteden.get(i);
+                pad = SnelstePimpl.aStarAlgoritme(kaart, startstad.getCoordinaat(), get.getCoordinaat());
                 double gvalue = pad.getPathGValue();
-               
-
                 map.put(get, gvalue);
             }
 
-            //checked de korste afstand
-            Map.Entry<Stad, Double> minEntry = null;
-            for (Map.Entry<Stad, Double> entry : map.entrySet()) {
-                if (minEntry == null || entry.getValue() <= minEntry.getValue()) {
-                    minEntry = entry;
-                }
-
-            }
-            
-            //voeg korsteafstand stad toe 
+            startstad = MinGvalueCity().getKey();
+            kosten = kosten + MinGvalueCity().getValue();
             kortsteafstandenstad.add(startstad);
-            System.out.println(kortsteafstandenstad.size()+"bkjsjvhbjhsbvjhdbvjhbjdhfbvjhbhbfvhfvhbfbhdbhdfhbjvbhjvfbhjvbhdfbhbhbhv");
-            thelist.remove(startstad);
-            Stad closest = minEntry.getKey();
-            startstad = closest;
-            
+            lijstvanSteden.remove(startstad);
+            map.clear();
 
-        
+            //Print kosten
+            if (lijstvanSteden.isEmpty()) {
+                System.out.println(kosten);
+            }
         }
+        //lijstvanSteden=list;
+        //beginstadmap.put(kortsteafstandenstad,kosten);
+        //kortsteafstandenstad.clear();
         
-        
-        //debug.debugSteden(kaart, kortsteafstandenstad);
-        for (Stad s : kortsteafstandenstad) {
-            System.out.println(s.getNaam());
-            
-        }
+    //}
         return kortsteafstandenstad;
-        
     }
+
+    private Entry<Stad, Double> MinGvalueCity() {
+        Entry<Stad, Double> min = null;
+        for (Entry<Stad, Double> entry : map.entrySet()) {
+            if (min == null || min.getValue() > entry.getValue()) {
+                min = entry;
+            }
+        }
+        return min;
+    }
+    /*
+     private Entry<List<Stad>, Double> bestebeginstad() {
+        Entry<List<Stad>, Double> min = null;
+        for (Entry<List<Stad>, Double> entry : beginstadmap.entrySet()) {
+            if (min == null || min.getValue() > entry.getValue()) {
+                min = entry;
+            }
+        }
+        return min;
+    }
+*/
 
     @Override
     public void setDebugger(Debugger debugger) {
