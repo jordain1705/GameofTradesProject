@@ -51,6 +51,10 @@ public class Tile{
         return this.gValue;
     }
     
+    public int getStartGValue(){
+        return gValue = kaart.getTerreinOp(position).getTerreinType().getBewegingspunten();
+    }
+    
     public void setGvalue(int gValue){
         this.gValue = gValue;
     }

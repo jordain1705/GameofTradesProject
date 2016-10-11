@@ -77,12 +77,13 @@ public class SnelstePadAlgoritmeImpl implements SnelstePadAlgoritme, Debuggable 
                             optionTile.setGvalue(selectedTile.getGValue() + optionTile.getGValue());
                             optionTile.setFValue(optionTile.getGValue() + optionTile.getHValue(eind));
                         } else {
-                            int ExistingFvalue = selectedTile.getHValue(eind) + selectedTile.getGValue();
+                            int ExistingGvalue = selectedTile.getGValue();
                             
-                            if (optionTile.getFValue() < ExistingFvalue) {
+                            if (optionTile.getGValue() > ExistingGvalue) {
                                 optionTile.setParent(selectedTile);
-                                optionTile.setGvalue(selectedTile.getGValue() + optionTile.getGValue());
-                                optionTile.setFValue(ExistingFvalue);
+
+                                optionTile.setGvalue(selectedTile.getGValue() + optionTile.getStartGValue());
+                                optionTile.setFValue(ExistingGvalue + selectedTile.getHValue(eind));
                             }
                         }
                     }
@@ -117,13 +118,13 @@ public class SnelstePadAlgoritmeImpl implements SnelstePadAlgoritme, Debuggable 
         Tile selectTile = closedList.get(closedList.size() - 1);
         Boolean startFound = false;
         
-        int PathGValue = 0;
+        int PathGValue = closedList.get(closedList.size() - 1).getGValue();
         
         correctPath.add(Eind);
         
         while (!startFound) {
             if (selectTile.getParent() != null) {
-               PathGValue += selectTile.getGValue();
+                //PathGValue += selectTile.getGValue();
                 
                 if (!selectTile.getParent().getCoordinaat().equals(start)) {
                     correctPath.add(selectTile.getParent().getCoordinaat());
@@ -139,8 +140,7 @@ public class SnelstePadAlgoritmeImpl implements SnelstePadAlgoritme, Debuggable 
         
         Collections.reverse(correctPath);
         Pad.setPathGValue(PathGValue);
-
-        
+        System.out.println(PathGValue);
         Pad.setPadCoordinaten(correctPath);
     }
 
