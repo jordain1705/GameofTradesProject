@@ -60,7 +60,7 @@ public class Tile{
     }
     
     public int getHValue(Coordinaat c){   
-        hValue = (Math.abs(position.getX() - c.getX()) + Math.abs(position.getY() - c.getY()));
+        hValue = (Math.abs(c.getX() - position.getX()) + Math.abs(c.getY() - position.getY()));
         return hValue;
     }
     
