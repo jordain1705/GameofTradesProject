@@ -51,12 +51,16 @@ public class Tile{
         return this.gValue;
     }
     
+    public int getStartGValue(){
+        return gValue = kaart.getTerreinOp(position).getTerreinType().getBewegingspunten();
+    }
+    
     public void setGvalue(int gValue){
         this.gValue = gValue;
     }
     
     public int getHValue(Coordinaat c){   
-        hValue = (Math.abs(position.getX() - c.getX()) + Math.abs(position.getY() - c.getY()));
+        hValue = (Math.abs(c.getX() - position.getX()) + Math.abs(c.getY() - position.getY()));
         return hValue;
     }
     

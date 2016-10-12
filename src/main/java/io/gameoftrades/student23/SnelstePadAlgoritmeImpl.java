@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 import io.gameoftrades.debug.Debuggable;
 import java.util.Collections;
+import java.util.HashMap;
 
 /**
  *
@@ -24,12 +25,14 @@ public class SnelstePadAlgoritmeImpl implements SnelstePadAlgoritme, Debuggable 
 
     private Debugger debug = new AsciiArtDebugger();
     PadImpl Pad;
+    
 
     @Override
     public Pad bereken(Kaart kaart, Coordinaat start, Coordinaat eind) {
         PadImpl CorrectPath = aStarAlgoritme(kaart, start, eind);
         
         debug.debugPad(kaart, start, CorrectPath);
+        
         
         return CorrectPath;
     }
@@ -40,22 +43,26 @@ public class SnelstePadAlgoritmeImpl implements SnelstePadAlgoritme, Debuggable 
         List<Tile> openList = new ArrayList();
         List<Tile> closedList = new ArrayList();
         
+        List<Coordinaat> closeListCoordinaat = new ArrayList();
+        List<Coordinaat> openListCoordinaat = new ArrayList();
+        
         Tile startTile = new Tile(kaart, start);
+        startTile.setGvalue(0);
         openList.add(startTile);
 
         Boolean isdone = false;
+        
+         Tile selectedTile;
 
         while (!isdone) {
-            Tile selectedTile = calcuLowestFTile(openList);
+            selectedTile = calcuLowestFTile(openList);
             openList.remove(selectedTile);
             closedList.add(selectedTile);
 
             if (selectedTile.getCoordinaat().equals(eind)) {
                 isdone = true;
-                shortestPath(start, eind,closedList);
+                shortestPath(kaart, start, eind,closedList);
             } else {
-                List<Coordinaat> closeListCoordinaat = new ArrayList();
-                List<Coordinaat> openListCoordinaat = new ArrayList();
                 
                 for (int i = 0; i < closedList.size(); i++) {
                     closeListCoordinaat.add(closedList.get(i).getCoordinaat());
@@ -67,24 +74,37 @@ public class SnelstePadAlgoritmeImpl implements SnelstePadAlgoritme, Debuggable 
 
                 List<Tile> selectedTileNB = selectedTile.getAllNeighbours();
 
-                for (Tile optionTile : selectedTileNB) {
-                    if (!closeListCoordinaat.contains(optionTile.getCoordinaat())) {
-                        if (!openListCoordinaat.contains(optionTile.getCoordinaat())) {
-                            openList.add(optionTile);
-                            optionTile.setParent(selectedTile);
-                            optionTile.setGvalue(optionTile.getGValue());
-                            
+                for (int i = 0; i < selectedTileNB.size(); i++) {
+                    Tile tileNB = selectedTileNB.get(i);
+                   // if (!closeListCoordinaat.contains(tileNB.getCoordinaat())) {
+                        if (!openListCoordinaat.contains(tileNB.getCoordinaat())) {
+                            openList.add(tileNB);
+                            tileNB.setParent(selectedTile);
+                            tileNB.setGvalue(selectedTile.getGValue() + tileNB.getStartGValue());
+                            tileNB.setFValue(tileNB.getGValue() + tileNB.getHValue(eind));
                         } else {
-                            int ExistingGvalue = selectedTile.getHValue(eind) + selectedTile.getGValue();
-                            if (optionTile.getGValue() > ExistingGvalue) {
-                                optionTile.setParent(selectedTile);
-                                optionTile.setGvalue(ExistingGvalue);
+                            int ExistingGvalue = selectedTile.getFValue();
+                            
+//                            if (tileNB.getGValue() < ExistingGvalue + tileNB.getStartGValue()) {
+                            if (tileNB.getGValue() > selectedTile.getGValue() + tileNB.getStartGValue()) {
+                                tileNB.setParent(selectedTile);
+                                
+                                tileNB.setGvalue(selectedTile.getGValue() + tileNB.getStartGValue());
+                                tileNB.setFValue(tileNB.getGValue() + tileNB.getHValue(eind));
+                                
+                                
                             }
+                            
+                            
+                            //debug.debugCoordinaten(kaart, closeListCoordinaat);
                         }
-                    }
+                   // }
                 }
+                
             }
         }
+        
+        
         
         return Pad;
     }
@@ -106,35 +126,39 @@ public class SnelstePadAlgoritmeImpl implements SnelstePadAlgoritme, Debuggable 
         }
     }
 
-    private void shortestPath(Coordinaat start, Coordinaat Eind, List<Tile> closedList) {
+    private void shortestPath(Kaart kaart, Coordinaat start, Coordinaat Eind, List<Tile> closedList) {
 
         List<Coordinaat> correctPath = new ArrayList();
 
         Tile selectTile = closedList.get(closedList.size() - 1);
         Boolean startFound = false;
         
-        int PathGValue = 0;
+        int PathGValue = closedList.get(closedList.size() - 1).getGValue();
         
         correctPath.add(Eind);
         
         while (!startFound) {
             if (selectTile.getParent() != null) {
+                //PathGValue += selectTile.getGValue();
+                
                 if (!selectTile.getParent().getCoordinaat().equals(start)) {
                     correctPath.add(selectTile.getParent().getCoordinaat());
                     selectTile = selectTile.getParent();
-                    PathGValue += selectTile.getGValue();
                 } else {
                     startFound = true;
                 }
-
+                
+                
             }
         }
+        
+        
         
         correctPath.add(start);
         
         Collections.reverse(correctPath);
         Pad.setPathGValue(PathGValue);
-
+        System.out.println(PathGValue);
         Pad.setPadCoordinaten(correctPath);
     }
 

@@ -49,8 +49,6 @@ public class PadImpl implements Pad{
             mogelijkeRichtingen[i] = richtingList.get(i);
         }
         
-        System.out.println(pathGValue);
-        
         richtingList.removeAll(richtingList);
         return mogelijkeRichtingen;
     }
