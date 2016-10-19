@@ -5,6 +5,7 @@
  */
 package io.gameoftrades.student23;
 
+import io.gameoftrades.debug.AsciiArtDebugger;
 import io.gameoftrades.debug.Debuggable;
 import io.gameoftrades.debug.Debugger;
 import io.gameoftrades.model.algoritme.StedenTourAlgoritme;
@@ -23,7 +24,8 @@ import java.util.Map.Entry;
  */
 public class StedenTourAlgoritmeImpl implements StedenTourAlgoritme, Debuggable {
 
-    Debugger debug;
+    
+    private Debugger debug = new AsciiArtDebugger();
     private  List<Stad> StedenTourPad ;
     private  SnelstePadAlgoritmeImpl SnelstePimpl;
     private  Map<Stad, Double> map ;
@@ -43,9 +45,11 @@ public class StedenTourAlgoritmeImpl implements StedenTourAlgoritme, Debuggable 
 
     @Override
     public List<Stad> bereken(Kaart kaart, List<Stad> steden) {
-
-        debug.debugSteden(kaart, findNearest(kaart, steden));
-        return findNearest(kaart, steden);
+         List<Stad> tour = findNearest(kaart, steden);
+        
+         debug.debugSteden(kaart, findNearest(kaart, steden));
+        
+        return tour ;
     }
 
     public List<Stad> findNearest(Kaart kaart, List<Stad> list) {
@@ -88,24 +92,24 @@ public class StedenTourAlgoritmeImpl implements StedenTourAlgoritme, Debuggable 
         return StedenTourPad;
     }
 
-    private Entry<Stad, Double> MinGvalueCity() {
-        Entry<Stad, Double> min = null;
-        for (Entry<Stad, Double> entry : map.entrySet()) {
-            if (min == null || min.getValue() > entry.getValue()) {
-                min = entry;
-            }
-        }
-        return min;
+    public Entry<Stad, Double> MinGvalueCity() {
+         Map.Entry<Stad, Double> minEntry = null;
+        for (Map.Entry<Stad, Double> entry : map.entrySet()) {
+   if (minEntry == null || entry.getValue() <= minEntry.getValue()) {
+      minEntry = entry;
+   }
+ }
+        return minEntry;
     }
    
-     private Entry<List<Stad>, Double> bestebeginstad() {
-        Entry<List<Stad>, Double> min = null;
+     public Entry<List<Stad>, Double> bestebeginstad() {
+         Map.Entry<List<Stad>, Double> minEntry = null;
         for (Entry<List<Stad>, Double> entry : beginstadmap.entrySet()) {
-            if (min == null || min.getValue() > entry.getValue()) {
-                min = entry;
-            }
+             if (minEntry == null || entry.getValue() <= minEntry.getValue()) {
+      minEntry = entry;
+   }
         }
-        return min;
+        return minEntry;
     }
 
 
