@@ -24,20 +24,21 @@ import java.util.Map.Entry;
 public class StedenTourAlgoritmeImpl implements StedenTourAlgoritme, Debuggable {
 
     Debugger debug;
-    private SnelstePadAlgoritmeImpl SnelstePimpl;
-    private Map<Stad, Double> map ;
+    private  List<Stad> StedenTourPad ;
+    private  SnelstePadAlgoritmeImpl SnelstePimpl;
+    private  Map<Stad, Double> map ;
     
-     //private Map<List<Stad>, Double> beginstadmap ;
+    Map<List<Stad>, Double> beginstadmap =new HashMap<>();
      
      
-    private List<Stad> kortsteafstandenstad ;
+   private  List<Stad> kortsteafstandenstad ;
    private  PadImpl pad;
 
     public StedenTourAlgoritmeImpl() {
         kortsteafstandenstad = new ArrayList<>();
         map= new HashMap<>();
         SnelstePimpl = new SnelstePadAlgoritmeImpl();
-        //beginstadmap=new HashMap<>();
+     
     }
 
     @Override
@@ -49,20 +50,14 @@ public class StedenTourAlgoritmeImpl implements StedenTourAlgoritme, Debuggable 
 
     public List<Stad> findNearest(Kaart kaart, List<Stad> list) {
 
-        List<Stad> lijstvanSteden = new ArrayList(list);
-        ListIterator<Stad> iterator = lijstvanSteden.listIterator();
-
-        Stad startstad = lijstvanSteden.get(0);//
-        double kosten = 0;//
-        kortsteafstandenstad.add(startstad);//
-        lijstvanSteden.remove(0);//
-        
-        //for (int j = 0; j < list.size(); j++) {
-      
-            //Stad startstad = lijstvanSteden.get(j);
-            //kortsteafstandenstad.add(startstad);
-        //double kosten = 0;
-         //lijstvanSteden.remove(j);
+        for (int j = 0; j < list.size(); j++) {
+            kortsteafstandenstad.clear();
+             List<Stad> lijstvanSteden = new ArrayList(list);
+            ListIterator<Stad> iterator = lijstvanSteden.listIterator();
+            Stad startstad = lijstvanSteden.get(j);
+            kortsteafstandenstad.add(startstad);
+        double kosten = 0;
+         lijstvanSteden.remove(j);
 
         while (iterator.hasNext()) {
 
@@ -71,8 +66,9 @@ public class StedenTourAlgoritmeImpl implements StedenTourAlgoritme, Debuggable 
                 pad = SnelstePimpl.aStarAlgoritme(kaart, startstad.getCoordinaat(), get.getCoordinaat());
                 double gvalue = pad.getPathGValue();
                 map.put(get, gvalue);
+             
             }
-
+       
             startstad = MinGvalueCity().getKey();
             kosten = kosten + MinGvalueCity().getValue();
             kortsteafstandenstad.add(startstad);
@@ -81,15 +77,15 @@ public class StedenTourAlgoritmeImpl implements StedenTourAlgoritme, Debuggable 
 
             //Print kosten
             if (lijstvanSteden.isEmpty()) {
-                System.out.println(kosten);
+                List<Stad> bestekorste = kortsteafstandenstad;
+                beginstadmap.put(bestekorste,kosten);
+                
             }
         }
-        //lijstvanSteden=list;
-        //beginstadmap.put(kortsteafstandenstad,kosten);
-        //kortsteafstandenstad.clear();
-        
-    //}
-        return kortsteafstandenstad;
+    }
+        System.out.println("Dit is de beste route de beste kosten en  de beste beginstad :"+bestebeginstad().getValue());
+        StedenTourPad=bestebeginstad().getKey();
+        return StedenTourPad;
     }
 
     private Entry<Stad, Double> MinGvalueCity() {
@@ -101,7 +97,7 @@ public class StedenTourAlgoritmeImpl implements StedenTourAlgoritme, Debuggable 
         }
         return min;
     }
-    /*
+   
      private Entry<List<Stad>, Double> bestebeginstad() {
         Entry<List<Stad>, Double> min = null;
         for (Entry<List<Stad>, Double> entry : beginstadmap.entrySet()) {
@@ -111,7 +107,7 @@ public class StedenTourAlgoritmeImpl implements StedenTourAlgoritme, Debuggable 
         }
         return min;
     }
-*/
+
 
     @Override
     public void setDebugger(Debugger debugger) {
