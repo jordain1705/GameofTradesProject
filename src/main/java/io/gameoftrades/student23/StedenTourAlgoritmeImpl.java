@@ -47,7 +47,7 @@ public class StedenTourAlgoritmeImpl implements StedenTourAlgoritme, Debuggable 
     public List<Stad> bereken(Kaart kaart, List<Stad> steden) {
          List<Stad> tour = findNearest(kaart, steden);
         
-         debug.debugSteden(kaart, findNearest(kaart, steden));
+         debug.debugSteden(kaart, tour);
         
         return tour ;
     }
@@ -56,14 +56,15 @@ public class StedenTourAlgoritmeImpl implements StedenTourAlgoritme, Debuggable 
 
         for (int j = 0; j < list.size(); j++) {
             kortsteafstandenstad.clear();
-             List<Stad> lijstvanSteden = new ArrayList(list);
+             List<Stad> lijstvanSteden = new ArrayList();
+             lijstvanSteden.addAll(list);
             ListIterator<Stad> iterator = lijstvanSteden.listIterator();
             Stad startstad = lijstvanSteden.get(j);
             kortsteafstandenstad.add(startstad);
         double kosten = 0;
          lijstvanSteden.remove(j);
-
-        while (iterator.hasNext()) {
+        Boolean isdone = false;
+        while (!isdone) {
 
             for (int i = 0; i < lijstvanSteden.size(); i++) {
                 Stad get = lijstvanSteden.get(i);
@@ -83,7 +84,7 @@ public class StedenTourAlgoritmeImpl implements StedenTourAlgoritme, Debuggable 
             if (lijstvanSteden.isEmpty()) {
                 List<Stad> bestekorste = kortsteafstandenstad;
                 beginstadmap.put(bestekorste,kosten);
-                
+                isdone = true;
             }
         }
     }
@@ -95,9 +96,10 @@ public class StedenTourAlgoritmeImpl implements StedenTourAlgoritme, Debuggable 
     public Entry<Stad, Double> MinGvalueCity() {
          Map.Entry<Stad, Double> minEntry = null;
         for (Map.Entry<Stad, Double> entry : map.entrySet()) {
-   if (minEntry == null || entry.getValue() <= minEntry.getValue()) {
+   if (minEntry == null || entry.getValue() < minEntry.getValue()) {
       minEntry = entry;
    }
+   
  }
         return minEntry;
     }
@@ -105,7 +107,7 @@ public class StedenTourAlgoritmeImpl implements StedenTourAlgoritme, Debuggable 
      public Entry<List<Stad>, Double> bestebeginstad() {
          Map.Entry<List<Stad>, Double> minEntry = null;
         for (Entry<List<Stad>, Double> entry : beginstadmap.entrySet()) {
-             if (minEntry == null || entry.getValue() <= minEntry.getValue()) {
+             if (minEntry == null || entry.getValue() < minEntry.getValue()) {
       minEntry = entry;
    }
         }
