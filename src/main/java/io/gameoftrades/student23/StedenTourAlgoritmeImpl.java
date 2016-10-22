@@ -27,9 +27,9 @@ public class StedenTourAlgoritmeImpl implements StedenTourAlgoritme, Debuggable 
     private Debugger debug = new AsciiArtDebugger();
     private List<Stad> StedenTourPad;
     private SnelstePadAlgoritmeImpl SnelstePimpl;
-    private Map<Stad, Double> map;
+    private Map<Stad, Integer> map;
 
-    Map<List<Stad>, Double> beginstadmap = new HashMap<>();
+    Map<List<Stad>, Integer> beginstadmap = new HashMap<>();
 
     private List<Stad> kortsteafstandenstad;
     private PadImpl pad;
@@ -58,7 +58,7 @@ public class StedenTourAlgoritmeImpl implements StedenTourAlgoritme, Debuggable 
             lijstvanSteden.addAll(list);
             Stad startstad = lijstvanSteden.get(j);
             kortsteafstandenstad.add(startstad);
-            double kosten = 0;
+            int kosten = 0;
             lijstvanSteden.remove(j);
             Boolean isdone = false;
             while (!isdone) {
@@ -66,7 +66,7 @@ public class StedenTourAlgoritmeImpl implements StedenTourAlgoritme, Debuggable 
                 for (int i = 0; i < lijstvanSteden.size(); i++) {
                     Stad get = lijstvanSteden.get(i);
                     pad = SnelstePimpl.aStarAlgoritme(kaart, startstad.getCoordinaat(), get.getCoordinaat());
-                    double gvalue = pad.getPathGValue();
+                    int gvalue = pad.getPathGValue();
                     map.put(get, gvalue);
 
                 }
@@ -80,6 +80,7 @@ public class StedenTourAlgoritmeImpl implements StedenTourAlgoritme, Debuggable 
                 //Print kosten
                 if (lijstvanSteden.isEmpty()) {
                     List<Stad> bestekorste = kortsteafstandenstad;
+                    System.out.println(kosten);
                     beginstadmap.put(bestekorste, kosten);
                     isdone = true;
                 }
@@ -90,9 +91,9 @@ public class StedenTourAlgoritmeImpl implements StedenTourAlgoritme, Debuggable 
         return StedenTourPad;
     }
 
-    public Entry<Stad, Double> MinGvalueCity() {
-        Map.Entry<Stad, Double> minEntry = null;
-        for (Map.Entry<Stad, Double> entry : map.entrySet()) {
+    public Entry<Stad, Integer> MinGvalueCity() {
+        Map.Entry<Stad, Integer> minEntry = null;
+        for (Map.Entry<Stad, Integer> entry : map.entrySet()) {
             if (minEntry == null || entry.getValue() < minEntry.getValue()) {
                 minEntry = entry;
             }
@@ -101,9 +102,9 @@ public class StedenTourAlgoritmeImpl implements StedenTourAlgoritme, Debuggable 
         return minEntry;
     }
 
-    public Entry<List<Stad>, Double> bestebeginstad() {
-        Map.Entry<List<Stad>, Double> minEntry = null;
-        for (Entry<List<Stad>, Double> entry : beginstadmap.entrySet()) {
+    public Entry<List<Stad>, Integer> bestebeginstad() {
+        Map.Entry<List<Stad>, Integer> minEntry = null;
+        for (Entry<List<Stad>, Integer> entry : beginstadmap.entrySet()) {
             if (minEntry == null || entry.getValue() < minEntry.getValue()) {
                 minEntry = entry;
             }
