@@ -10,6 +10,7 @@ import io.gameoftrades.model.kaart.Stad;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import static org.junit.Assert.assertEquals;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -31,18 +32,34 @@ public class StedenTourAlgoritmeImplTest {
     }
 
     @Test
-    public void zouMinimummoetenhalen() {
+    public void zouMinimumMinGvalueCitymoetenhalen() {
         Wereld wereld = wereldLader.laad("/kaarten/westeros-kaart.txt");
-        List<Stad> TestStadList = wereld.getSteden();
-        
-        StedenTourAlgoritmeImpl tour = new StedenTourAlgoritmeImpl();
-        tour.findNearest(wereld.getKaart(), TestStadList);
-        
-        tour.MinGvalueCity();
-       
-   
-       
-        
+        List<Stad> StadList = wereld.getSteden();
+        Map<Stad, Integer> map = new HashMap<>();
+
+        map.put(StadList.get(1), 2);
+        map.put(StadList.get(2), 4);
+        map.put(StadList.get(3), 5);
+
+        int x = tour.MinGvalueCity(map).getValue();
+        assertEquals(2, x);
+
+    }
+
+    @Test
+    public void zouMinimumbestebeginstadmoetenhalen() {
+        Wereld wereld = wereldLader.laad("/kaarten/westeros-kaart.txt");
+        Wereld wereld2 = wereldLader.laad("/kaarten/voorbeeld-kaart.txt");
+        List<Stad> StadList = wereld.getSteden();
+        List<Stad> StadList2 = wereld2.getSteden();
+
+        Map<List<Stad>, Integer> map = new HashMap<>();
+
+        map.put(StadList, 10);
+        map.put(StadList2, 20);
+
+        int x = tour.bestebeginstad(map).getValue();
+        assertEquals(10, x);
 
     }
 
