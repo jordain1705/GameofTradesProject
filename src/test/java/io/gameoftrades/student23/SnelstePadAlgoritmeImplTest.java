@@ -18,15 +18,23 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
+import org.mockito.Mockito;
+
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.runners.MockitoJUnitRunner;
 /**
  *
  * @author danie_000
  */
+@RunWith(MockitoJUnitRunner.class)
 public class SnelstePadAlgoritmeImplTest {
-            
+    
     private SnelstePadAlgoritmeImpl SnelstePadLader;
+    
     private WereldLader wereldLader;
 
     @Before
@@ -52,8 +60,23 @@ public class SnelstePadAlgoritmeImplTest {
         List<Stad> TestStadList = wereld.getSteden();
         
         TestPad = SnelstePadLader.aStarAlgoritme(wereld.getKaart(), TestStadList.get(0).getCoordinaat(), TestStadList.get(1).getCoordinaat());
-        
         assertEquals(19, TestPad.getPathGValue());
+        TestPad = SnelstePadLader.aStarAlgoritme(wereld.getKaart(), TestStadList.get(0).getCoordinaat(), TestStadList.get(2).getCoordinaat());
+        assertEquals(15, TestPad.getPathGValue());
+        TestPad = SnelstePadLader.aStarAlgoritme(wereld.getKaart(), TestStadList.get(0).getCoordinaat(), TestStadList.get(3).getCoordinaat());
+        assertEquals(9, TestPad.getPathGValue());
+        
     }
     
+    @Test(expected = IllegalArgumentException.class)
+    public void GeenMogelijkePadTussen2Steden(){
+        Wereld wereld = wereldLader.laad("/kaarten/onmogelijke-route.txt");
+        SnelstePadLader.bereken(wereld.getKaart(), wereld.getSteden().get(0).getCoordinaat(), wereld.getSteden().get(1).getCoordinaat());
+    }
+    
+    @Test(expected = IllegalArgumentException.class)
+    public void StartEnEindCoordinaatIsHetzelfde(){
+        Wereld wereld = wereldLader.laad("/kaarten/westeros-kaart.txt");
+        SnelstePadLader.bereken(wereld.getKaart(), wereld.getSteden().get(0).getCoordinaat(), wereld.getSteden().get(0).getCoordinaat());
+    }
 }

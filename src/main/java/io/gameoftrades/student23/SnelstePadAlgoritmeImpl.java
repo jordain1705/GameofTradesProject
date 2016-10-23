@@ -37,6 +37,10 @@ public class SnelstePadAlgoritmeImpl implements SnelstePadAlgoritme, Debuggable 
 
     public PadImpl aStarAlgoritme(Kaart kaart, Coordinaat start, Coordinaat eind) {
         Pad = new PadImpl(kaart);
+        
+        if(start.equals(eind)){
+            throw new IllegalArgumentException("Start coordinate and End coordinate are the same.");
+        }
 
         List<Tile> openList = new ArrayList();
         List<Tile> closedList = new ArrayList();
@@ -50,12 +54,12 @@ public class SnelstePadAlgoritmeImpl implements SnelstePadAlgoritme, Debuggable 
         Tile selectedTile;
 
         while (!isdone) {
-            selectedTile = calcuLowestFTile(openList);
+            selectedTile = calculateLowestFTile(openList);
             openList.remove(selectedTile);
             closedList.add(selectedTile);
 
             if (selectedTile.getCoordinaat().equals(eind)) {
-                shortestPath(kaart, start, eind, closedList);
+                setShortestPath(start, eind, closedList);
                 break;
             } else {
                 List<Tile> selectedTileNB = getAllNeighbours(kaart, selectedTile, eind);
@@ -88,7 +92,7 @@ public class SnelstePadAlgoritmeImpl implements SnelstePadAlgoritme, Debuggable 
         return Pad;
     }
 
-    public List<Tile> getAllNeighbours(Kaart kaart, Tile selectedTile, Coordinaat eind) {
+    private List<Tile> getAllNeighbours(Kaart kaart, Tile selectedTile, Coordinaat eind) {
         List<Tile> neighbours = new ArrayList();
 
         Richting[] mogelijkeRichtingen = kaart.getTerreinOp(selectedTile.getCoordinaat()).getMogelijkeRichtingen();
@@ -100,7 +104,7 @@ public class SnelstePadAlgoritmeImpl implements SnelstePadAlgoritme, Debuggable 
         return neighbours;
     }
 
-    private Tile calcuLowestFTile(List<Tile> openList) {
+    private Tile calculateLowestFTile(List<Tile> openList) {
 
         if (!openList.isEmpty()) {
             Tile lowestFTile = openList.get(0);
@@ -116,7 +120,7 @@ public class SnelstePadAlgoritmeImpl implements SnelstePadAlgoritme, Debuggable 
         }
     }
 
-    private void shortestPath(Kaart kaart, Coordinaat start, Coordinaat Eind, List<Tile> closedList) {
+    private void setShortestPath(Coordinaat start, Coordinaat Eind, List<Tile> closedList) {
 
         List<Coordinaat> correctPath = new ArrayList();
 
