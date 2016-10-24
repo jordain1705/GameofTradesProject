@@ -6,6 +6,7 @@
 package io.gameoftrades.student23;
 
 import io.gameoftrades.model.Wereld;
+import io.gameoftrades.model.kaart.Coordinaat;
 import io.gameoftrades.model.kaart.Stad;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -34,25 +35,36 @@ public class StedenTourAlgoritmeImplTest {
 
     @Test
     public void zouMinimumMinGvalueCitymoetenhalen() {
-        Wereld wereld = wereldLader.laad("/kaarten/westeros-kaart.txt");
-        List<Stad> StadList = wereld.getSteden();
+        Stad eerststad = new Stad(Coordinaat.op(2, 4), "Den haag");
+        Stad tweedestad = new Stad(Coordinaat.op(5, 5), "Rotterdam");
+        Stad derdestad = new Stad(Coordinaat.op(7, 5), "Delft");
+        Stad vierdestad = new Stad(Coordinaat.op(9, 5), "Utrecht");
+        Stad vijfdestad = new Stad(Coordinaat.op(20, 5), "walibi");
         Map<Stad, Integer> map = new HashMap<>();
+        
+        int lowestGValue = 22;
 
-        map.put(StadList.get(1), 2);
-        map.put(StadList.get(2), 4);
-        map.put(StadList.get(3), 5);
-
-        int x = tour.MinGvalueCity(map).getValue();
-        assertEquals(2, x);
+        map.put(eerststad, lowestGValue);
+        map.put(tweedestad, 40);
+        map.put(derdestad, 55);
+        map.put(vierdestad, 66);
+        map.put(vijfdestad, 89);
+        
+        int vergelijkendevalue = tour.MinGvalueCity(map).getValue();
+        assertEquals(lowestGValue, vergelijkendevalue);
 
     }
 
     @Test
     public void zouMinimumbestebeginstadmoetenhalen() {
-        Wereld wereld = wereldLader.laad("/kaarten/westeros-kaart.txt");
-        Wereld wereld2 = wereldLader.laad("/kaarten/voorbeeld-kaart.txt");
-        List<Stad> StadList = wereld.getSteden();
-        List<Stad> StadList2 = wereld2.getSteden();
+
+        List<Stad> StadList = new ArrayList<>();
+        StadList.add(new Stad(Coordinaat.op(2, 4), "Den haag"));
+        StadList.add(new Stad(Coordinaat.op(7, 5), "Delft"));
+
+        List<Stad> StadList2 = new ArrayList<>();
+        StadList2.add(new Stad(Coordinaat.op(4, 6), "Rotterdam"));
+        StadList2.add(new Stad(Coordinaat.op(9, 5), "Utrecht"));
 
         Map<List<Stad>, Integer> map = new HashMap<>();
 
@@ -63,16 +75,5 @@ public class StedenTourAlgoritmeImplTest {
         assertEquals(10, x);
 
     }
-
-    @Test
-    public void Gaatalleen1stadLangs() {
-        Wereld wereld = wereldLader.laad("/kaarten/westeros-kaart.txt");
-
-        List<Stad> StadList = new ArrayList<>(wereld.getSteden());
-        Stad eerste = StadList.get(0);
-        StadList.remove(0);
-        assertEquals(StadList.contains(eerste), false);
-
-    }
-
+ 
 }
