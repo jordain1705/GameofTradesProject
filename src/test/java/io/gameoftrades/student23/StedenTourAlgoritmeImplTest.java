@@ -7,6 +7,7 @@ package io.gameoftrades.student23;
 
 import io.gameoftrades.model.Wereld;
 import io.gameoftrades.model.kaart.Stad;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -60,6 +61,17 @@ public class StedenTourAlgoritmeImplTest {
 
         int x = tour.bestebeginstad(map).getValue();
         assertEquals(10, x);
+
+    }
+
+    @Test
+    public void Gaatalleen1stadLangs() {
+        Wereld wereld = wereldLader.laad("/kaarten/westeros-kaart.txt");
+
+        List<Stad> StadList = new ArrayList<>(wereld.getSteden());
+        Stad eerste = StadList.get(0);
+        StadList.remove(0);
+        assertEquals(StadList.contains(eerste), false);
 
     }
 
