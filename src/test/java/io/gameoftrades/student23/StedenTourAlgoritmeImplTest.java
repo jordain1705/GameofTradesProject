@@ -5,7 +5,6 @@
  */
 package io.gameoftrades.student23;
 
-import io.gameoftrades.model.Wereld;
 import io.gameoftrades.model.kaart.Coordinaat;
 import io.gameoftrades.model.kaart.Stad;
 import java.util.ArrayList;
@@ -67,12 +66,12 @@ public class StedenTourAlgoritmeImplTest {
         StadList2.add(new Stad(Coordinaat.op(9, 5), "Utrecht"));
 
         Map<List<Stad>, Integer> map = new HashMap<>();
-
+  int lowestTotaleKosten = 10;
         map.put(StadList, 10);
         map.put(StadList2, 20);
 
-        int x = tour.bestebeginstad(map).getValue();
-        assertEquals(10, x);
+        int vergelijkdelowestTotaleKosten = tour.bestebeginstad(map).getValue();
+        assertEquals(lowestTotaleKosten, vergelijkdelowestTotaleKosten);
 
     }
  

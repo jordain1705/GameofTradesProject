@@ -24,18 +24,23 @@ import java.util.Map.Entry;
 public class StedenTourAlgoritmeImpl implements StedenTourAlgoritme, Debuggable {
 
     private Debugger debug = new AsciiArtDebugger();
-    private List<Stad> StedenTourPad= new ArrayList();
+    private List<Stad> StedenTourPad;
     private final SnelstePadAlgoritmeImpl SnelstePimpl;
-    private final Map<Stad, Integer> map;
-    private final Map<List<Stad>, Integer> TotaalkostenPerBeginstad = new HashMap<>();
-    private final List<Stad> Kostenperstad;
     private PadImpl pad;
-    List<Stad> lijstvanSteden = new ArrayList();
-    public StedenTourAlgoritmeImpl() {
-        Kostenperstad = new ArrayList<>();
-        map = new HashMap<>();
-        SnelstePimpl = new SnelstePadAlgoritmeImpl();
+    private static StedenTourAlgoritmeImpl firstinstance;
 
+    public StedenTourAlgoritmeImpl() {
+        SnelstePimpl = new SnelstePadAlgoritmeImpl();
+        StedenTourPad = new ArrayList();
+
+    }
+    
+    //Signleton
+    public static synchronized StedenTourAlgoritmeImpl getInstance(){
+        if (firstinstance==null){
+            firstinstance= new StedenTourAlgoritmeImpl();
+        }
+        return firstinstance;
     }
 
     @Override
@@ -47,13 +52,17 @@ public class StedenTourAlgoritmeImpl implements StedenTourAlgoritme, Debuggable 
         return tour;
     }
 
-    public List<Stad> findNearest(Kaart kaart, List<Stad> list) {
+    private List<Stad> findNearest(Kaart kaart, List<Stad> list) {
+        Map<Stad, Integer> KostenNaarStad = new HashMap<>();
+        Map<List<Stad>, Integer> TotaalkostenAndereBeginstad = new HashMap<>();
+        List<Stad> KostenStad = new ArrayList<>();
+        List<Stad> lijstvanSteden = new ArrayList<>();
 
         for (int j = 0; j < list.size(); j++) {
-            Kostenperstad.clear();      
+            KostenStad.clear();
             lijstvanSteden.addAll(list);
             Stad startstad = lijstvanSteden.get(j);
-            Kostenperstad.add(startstad);
+            KostenStad.add(startstad);
             int kosten = 0;
             lijstvanSteden.remove(j);
             Boolean isdone = false;
@@ -63,26 +72,23 @@ public class StedenTourAlgoritmeImpl implements StedenTourAlgoritme, Debuggable 
                     Stad volgendestad = lijstvanSteden.get(i);
                     pad = SnelstePimpl.aStarAlgoritme(kaart, startstad.getCoordinaat(), volgendestad.getCoordinaat());
                     int gvalue = pad.getPathGValue();
-                    map.put(volgendestad, gvalue);
+                    KostenNaarStad.put(volgendestad, gvalue);
 
                 }
-
-                startstad = MinGvalueCity(map).getKey();
-                kosten = kosten + MinGvalueCity(map).getValue();
-                Kostenperstad.add(startstad);
+                startstad = MinGvalueCity(KostenNaarStad).getKey();
+                kosten = kosten + MinGvalueCity(KostenNaarStad).getValue();
+                KostenStad.add(startstad);
                 lijstvanSteden.remove(startstad);
-                map.clear();
+                KostenNaarStad.clear();
 
-                //Print kosten
-                if (lijstvanSteden.isEmpty()) {      
-                   
-                    TotaalkostenPerBeginstad.put(Kostenperstad, kosten);
+                if (lijstvanSteden.isEmpty()) {
+                    TotaalkostenAndereBeginstad.put(KostenStad, kosten);
                     isdone = true;
                 }
             }
         }
-        System.out.println("Dit is de beste route de beste kosten en  de beste beginstad :" + bestebeginstad(TotaalkostenPerBeginstad).getValue());
-        StedenTourPad = bestebeginstad(TotaalkostenPerBeginstad).getKey();
+        System.out.println("Dit is de onze beste route en onze beste beginstad:" + bestebeginstad(TotaalkostenAndereBeginstad).getValue());
+        StedenTourPad = bestebeginstad(TotaalkostenAndereBeginstad).getKey();
         return StedenTourPad;
     }
 
