@@ -49,11 +49,8 @@ public class SnelstePadAlgoritmeImplTest {
         PadImpl TestPad;
         TestPad = SnelstePadLader.aStarAlgoritme(wereld.getKaart(), Coordinaat.op(14, 16), Coordinaat.op(13, 45));
         
-        Coordinaat testStartCoordinaat = TestPad.getPadCoordinaten().get(0);
-        Coordinaat testEndCoordinaat = TestPad.getPadCoordinaten().get((TestPad.getPadCoordinaten().size() - 1));
-        
-        assertEquals(TerreinType.STAD,  wereld.getKaart().getTerreinOp(testStartCoordinaat).getTerreinType());
-        assertEquals(TerreinType.STAD,  wereld.getKaart().getTerreinOp(testEndCoordinaat).getTerreinType());
+        assertEquals(TerreinType.STAD,  wereld.getKaart().getTerreinOp(TestPad.getPadCoordinaten().get(0)).getTerreinType());
+        assertEquals(TerreinType.STAD,  wereld.getKaart().getTerreinOp(TestPad.getPadCoordinaten().get(TestPad.getPadCoordinaten().size() - 1)).getTerreinType());
     }
     
     @Test
