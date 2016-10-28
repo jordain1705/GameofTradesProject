@@ -49,8 +49,8 @@ public class StedenTourAlgoritmeImplTest {
         map.put(vierdestad, 66);
         map.put(vijfdestad, 89);
         
-        int vergelijkendevalue = tour.MinGvalueCity(map).getValue();
-        assertEquals(ExpectedlowestGValue, vergelijkendevalue);
+        int Resultaat = tour.MinGvalueCity(map).getValue();
+        assertEquals(ExpectedlowestGValue, Resultaat);
 
     }
 
