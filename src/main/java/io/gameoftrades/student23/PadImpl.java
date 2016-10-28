@@ -17,6 +17,7 @@ import java.util.List;
  *
  * @author Daniel
  */
+
 public class PadImpl implements Pad{
     private List<Coordinaat> padCoordinaten = new ArrayList();
     
@@ -29,7 +30,7 @@ public class PadImpl implements Pad{
     
     @Override
     public int getTotaleTijd() {
-        return padCoordinaten.size();
+        return pathGValue;
     }
 
     @Override
@@ -48,8 +49,6 @@ public class PadImpl implements Pad{
         for (int i = 0; i < richtingList.size(); i++) {
             mogelijkeRichtingen[i] = richtingList.get(i);
         }
-        
-        System.out.println(pathGValue);
         
         richtingList.removeAll(richtingList);
         return mogelijkeRichtingen;
@@ -73,7 +72,7 @@ public class PadImpl implements Pad{
             return padCoordinaten.get(padCoordinaten.size() - 1);
         }
         else{
-            throw new IllegalArgumentException("Invalid Start coordinaat");
+            throw new IllegalArgumentException("Invalid Start coordinate");
         }
     }
     

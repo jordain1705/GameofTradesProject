@@ -1,4 +1,4 @@
-package io.gameoftrades.student23;
+    package io.gameoftrades.student23;
 
 import io.gameoftrades.student23.HandelaarImpl;
 import static org.junit.Assert.assertEquals;

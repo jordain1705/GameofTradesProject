@@ -19,20 +19,21 @@ public class Tile{
     
     Kaart kaart;
     Coordinaat position;
-    List<Tile> neighbours = new ArrayList();
+
     private Tile parent;
     private int gValue, FValue; 
-    private int hValue = 0;
+    private int hValue;
     
-    public Tile(Kaart kaart, Coordinaat position){
+    private Coordinaat eind;
+    
+    public Tile(Kaart kaart, Coordinaat position, Coordinaat Eind){
         this.position = position;
         this.kaart = kaart;
+        this.eind = Eind;
+        
         gValue = kaart.getTerreinOp(position).getTerreinType().getBewegingspunten();
+        hValue = (Math.abs(eind.getX() - position.getX()) + Math.abs(eind.getY() - position.getY()));
         FValue = gValue + hValue;
-    }
-    
-    public Tile(Coordinaat position){
-        this.position = position;        
     }
     
     public Coordinaat getCoordinaat(){
@@ -51,16 +52,21 @@ public class Tile{
         return this.gValue;
     }
     
+    public int getStartGValue(){
+        int GStartValue =kaart.getTerreinOp(position).getTerreinType().getBewegingspunten();
+        return GStartValue;
+    }
+    
     public void setGvalue(int gValue){
         this.gValue = gValue;
     }
     
-    public int getHValue(Coordinaat c){   
-        hValue = (Math.abs(position.getX() - c.getX()) + Math.abs(position.getY() - c.getY()));
-        return hValue;
+    public int getHValue(){   
+        return this.hValue;
     }
     
     public int getFValue() {
+        FValue = gValue + hValue;
         return FValue;
     }
 
@@ -76,16 +82,13 @@ public class Tile{
         this.parent = parent;
     }
     
-    public List<Tile>getAllNeighbours(){
-        Richting[] mogelijkeRichtingen = kaart.getTerreinOp(position).getMogelijkeRichtingen();
-
-        for (int i = 0; i < mogelijkeRichtingen.length; i++) {
-             neighbours.add(new Tile(kaart, position.naar(mogelijkeRichtingen[i])));
+    @Override
+    public boolean equals (Object o) {
+        Tile temp = (Tile) o;
+        
+        if (o != null && temp.getCoordinaat().equals(this.getCoordinaat())){
+            return true;
         }
-        return neighbours;
+        return false;
     }
-
-    
-
-    
 }

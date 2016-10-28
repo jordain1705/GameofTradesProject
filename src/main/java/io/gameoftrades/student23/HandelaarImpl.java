@@ -42,7 +42,7 @@ public class HandelaarImpl implements Handelaar {
     @Override
     public StedenTourAlgoritme nieuwStedenTourAlgoritme() {
         // TODO Auto-generated method stub
-        return new StedenTourAlgoritmeImpl();
+        return StedenTourAlgoritmeImpl.getInstance();
     }
 
     /**
