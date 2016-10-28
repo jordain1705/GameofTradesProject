@@ -19,7 +19,7 @@ import java.util.Scanner;
 public class WereldLaderImpl implements WereldLader {
 
     @Override
-    public Wereld laad(String resource) {
+    public Wereld laad(String resource){
         //
         // Gebruik this.getClass().getResourceAsStream(resource) om een resource van het classpath te lezen.
         //
@@ -32,27 +32,24 @@ public class WereldLaderImpl implements WereldLader {
 
         String[] Line = in.nextLine().split(",");
 
-        int w = Integer.parseInt(Line[0].trim());//10
-        int h = Integer.parseInt(Line[1].trim());//10
+        int w = Integer.parseInt(Line[0].trim());
+        int h = Integer.parseInt(Line[1].trim());
         LinkedList<String> terreinLines = new LinkedList();
 
-        //vult terein array met De werekleijke lijnen
         for (int i = 0; i < h; i++) {
             terreinLines.add(in.nextLine().trim());
 
-            if (terreinLines.get(i).matches(".*\\d.*")) {//check als letters niet gelijk zijn aan wat in de programma zit
+            if (terreinLines.get(i).matches(".*\\d.*")) {
                 throw new IllegalArgumentException("Invalid Terrein value");
             }
         }
 
         int numberCity = Integer.parseInt(in.nextLine().trim());
 
-        //volgende stap
-        //vullt citys
         LinkedList<String> cityLines = new LinkedList();
-        String[] cityName = new String[numberCity]; //vier city namen. daarom Arrays
-        int[] cityX = new int[numberCity];//vier x coordinaten
-        int[] cityY = new int[numberCity];//vier y coordinaten
+        String[] cityName = new String[numberCity];
+        int[] cityX = new int[numberCity];
+        int[] cityY = new int[numberCity];
 
         for (int i = 0; i < numberCity; i++) {
             String cityLine = in.nextLine().trim();
@@ -81,12 +78,18 @@ public class WereldLaderImpl implements WereldLader {
             for (String trades : tradesLines) {
                 String[] tempTrades = trades.split(",");
                 tradeCityName[i] = tempTrades[0];
-                if (tempTrades[1].equals("VRAAGT") || tempTrades[1].equals("BIEDT")) {
-
-                    tradeType[i] = tempTrades[1];
-                } else {
-                    throw new IllegalArgumentException("Invalid HandelsType value");
+                
+                switch(tempTrades[1]){
+                    case "VRAAGT":
+                        tradeType[i] = tempTrades[1];
+                        break;
+                    case "BIEDT":
+                        tradeType[i] = tempTrades[1];
+                        break; 
+                    default:
+                        throw new IllegalArgumentException("Invalid HandelsType value");
                 }
+                
                 tradeGoods[i] = tempTrades[2];
                 tradePrice[i] = Integer.parseInt(tempTrades[3]);
 
@@ -96,9 +99,9 @@ public class WereldLaderImpl implements WereldLader {
         List<Stad> steden = new ArrayList();
         List<Handel> handels = new ArrayList();
 
-        //Coordinaat coordinaat = null;
         for (int i = 0; i < numberCity; i++) {
-            if (cityX[i] == 0 && cityY[i] == 0) {
+            
+            if (cityX[i] < 1 || cityY[i] < 1 || cityX[i] > w || cityY[i] > h) {
                 throw new IllegalArgumentException("Invalid coordinate for city " + cityName[i]);
             } else {
                 steden.add(new Stad(Coordinaat.op(cityX[i] - 1, cityY[i] - 1), cityName[i]));
@@ -120,11 +123,11 @@ public class WereldLaderImpl implements WereldLader {
         //maakt 2d array met CHARACTERS Z,b,s etc. Niet werkelijke zee, berg
         for (int i = 0; i < h; i++) {
             for (int j = 0; j < w; j++) {
-                String[] temp = terreinLines.get(i)/*tereinZZZGZZ*/.split("");
+                String[] temp = terreinLines.get(i).split("");
                 if (temp.length < w) {
                     throw new IllegalArgumentException("Invalid width value");
                 } else {
-                    mapCharacters[j][i] = temp[j];//// als i= O is is temp[4] = G
+                    mapCharacters[j][i] = temp[j];
                 }
             }
         }
@@ -139,16 +142,6 @@ public class WereldLaderImpl implements WereldLader {
         Wereld world = new Wereld(kaart, steden, markt);
 
         return world;
-    }
-
-    public void MapTesting(String resource) {
-        Scanner in = new Scanner(this.getClass().getResourceAsStream(resource));
-
-        while (in.hasNext()) {
-            String temp = in.nextLine();
-            System.out.println(temp);
-        }
-
     }
 
     private Stad GetCity(String cityName, List<Stad> steden) {
