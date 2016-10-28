@@ -11,13 +11,6 @@ public class StudentUI {
         
 	public static void main(String[] args) {
             MainGui.toon(new HandelaarImpl(), "/kaarten/westeros-kaart.txt");
-            
-            //WereldLaderImpl test = new WereldLaderImpl();
-            
-            
-            //test.MapTesting("/kaarten/westeros-kaart.txt");
-            
-            
 	}
 	
 }

@@ -7,9 +7,6 @@ package io.gameoftrades.student23;
 
 import io.gameoftrades.model.kaart.Coordinaat;
 import io.gameoftrades.model.kaart.Kaart;
-import io.gameoftrades.model.kaart.Richting;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  *

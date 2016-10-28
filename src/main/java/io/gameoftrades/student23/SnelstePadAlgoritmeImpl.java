@@ -133,7 +133,6 @@ public class SnelstePadAlgoritmeImpl implements SnelstePadAlgoritme, Debuggable 
 
         while (!startFound) {
             if (selectTile.getParent() != null) {
-                //PathGValue += selectTile.getGValue();
 
                 if (!selectTile.getParent().getCoordinaat().equals(start)) {
                     correctPath.add(selectTile.getParent().getCoordinaat());
@@ -148,7 +147,6 @@ public class SnelstePadAlgoritmeImpl implements SnelstePadAlgoritme, Debuggable 
 
         Collections.reverse(correctPath);
         Pad.setPathGValue(PathGValue);
-        //System.out.println(PathGValue);
         Pad.setPadCoordinaten(correctPath);
     }
 

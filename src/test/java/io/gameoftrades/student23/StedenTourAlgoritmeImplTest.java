@@ -5,7 +5,6 @@
  */
 package io.gameoftrades.student23;
 
-import io.gameoftrades.model.Wereld;
 import io.gameoftrades.model.kaart.Coordinaat;
 import io.gameoftrades.model.kaart.Stad;
 import java.util.ArrayList;
